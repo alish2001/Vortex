@@ -1,6 +1,10 @@
 package exige.supply.vortex;
 
+import exige.supply.vortex.renderer.Renderer;
+
 public class VortexGame {
+
+	private Renderer renderer;
 
 	private Player[] players = new Player[2];
 	private int time;
@@ -11,6 +15,7 @@ public class VortexGame {
 		players[1] = new Player("Player 2", 2);
 		setTime(180);
 		setNumberOfRounds(3);
+        renderer = new Renderer();
 	}
 	
 	public VortexGame(Player player1, Player player2) {

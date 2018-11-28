@@ -3,3 +3,5 @@
 *.prefs
 .project
 .classpath
+*.xml
+*.iml
