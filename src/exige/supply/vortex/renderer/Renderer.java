@@ -90,9 +90,15 @@ public class Renderer extends Canvas implements Runnable {
 
         stop(); // Stop thread
     }
-
+    
+    int x = 0;
+    int y = 0;
     public void update() {
-
+    	keys.update();
+    	if (keys.up) y--;
+    	if (keys.down) y++;
+    	if (keys.right) x++;
+    	if (keys.left) x--;
     }
 
     public void render() { // Render Game
@@ -103,13 +109,13 @@ public class Renderer extends Canvas implements Runnable {
         }
 
         screen.clear(); // Clear screen
-        screen.render(0, 0); // Render current screen
+        screen.render(x, y); // Render current screen
 
         for (int i = 0; i < pixels.length; i++) {
             pixels[i] = screen.getPixels()[i]; // Write screen to buffered image
         }
         Graphics g = bs.getDrawGraphics(); // Link graphics to buffer
-        g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(image, 0, 0, getWidth(), getHeight(), null); // Draw image to Graphics object
         g.dispose(); // Empty rendered graphics from memory
         bs.show(); // Show calculated buffer
     }
