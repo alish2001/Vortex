@@ -67,7 +67,7 @@ public class Renderer extends Canvas implements Runnable {
         double delta = 0;
         int frames = 0;
         int updates = 0;
-
+        requestFocus(); // Put game in focus
         while (running) {
             long now = System.nanoTime(); // Current time
             delta += (now - lastTime) / ns; // DeltaTime divided by refresh const
@@ -95,10 +95,10 @@ public class Renderer extends Canvas implements Runnable {
     int y = 0;
     public void update() {
     	keys.update();
-    	if (keys.up) y--;
-    	if (keys.down) y++;
-    	if (keys.right) x++;
-    	if (keys.left) x--;
+    	if (keys.up) y++;
+    	if (keys.down) y--;
+    	if (keys.right) x--;
+    	if (keys.left) x++;
     }
 
     public void render() { // Render Game

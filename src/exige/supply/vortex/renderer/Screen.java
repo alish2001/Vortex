@@ -2,6 +2,8 @@ package exige.supply.vortex.renderer;
 
 import java.util.Random;
 
+import exige.supply.vortex.sprites.Sprites;
+
 public class Screen {
 
 	private int width, height;
@@ -34,13 +36,13 @@ public class Screen {
 
 	public void render(int xOffset, int yOffset) {
 		for (int y = 0; y < height; y++) {
-			int yy = y + yOffset;
+			int yOff = y + yOffset;
+			if (yOff < 0 || yOff >= height) continue;
 			for (int x = 0; x < width; x++) {
-				int xx = x + xOffset;
-				// Extrapolate tile index from screen pixels | x / 16 is x shifted to the right
-				// by 4 | bitwise &, when the result of the shift is above 63, bring back to 0
-				int tileIndex = ((xx >> 4) & MAP_MASK) + ((yy >> 4) & MAP_MASK) * MAP_SIZE;
-				pixels[x + y * width] = tiles[tileIndex];
+				int xOff = x + xOffset;
+				if (xOff < 0 || xOff >= width) continue;
+				int size = Sprites.GRASS.getSpriteClass().SIZE;
+				pixels[xOff +  yOff * width] = Sprites.GRASS.getSpriteClass().pixels[(x & size-1) + (y & size-1) * size];
 			}
 		}
 

@@ -1,4 +1,4 @@
-package exige.supply.vortex.renderer;
+package exige.supply.vortex.sprites;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class SpriteSheet {
-
+	
 	private String path;
 	public final int SIZE;
 	public int[] pixels;
