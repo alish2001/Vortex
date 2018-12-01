@@ -1,6 +1,7 @@
 package exige.supply.vortex.levels;
 
 import exige.supply.vortex.renderer.Screen;
+import exige.supply.vortex.sprites.Sprites;
 
 public class Level {
 
@@ -11,6 +12,7 @@ public class Level {
 		this.width = width;
 		this.height = height;
 		tiles = new int[width * height];
+		generate();
 	}
 	
 	public Level (String path) {
@@ -34,6 +36,22 @@ public class Level {
 	}
 
 	public void render(int xMove, int yMove, Screen screen) {
+	    screen.setOffset(xMove, yMove);
+	    // Corner Pins
+		int x0 = xMove >> 4; // Convert into TILE PRECISION | Shift by 4 (divided by 16(2^4))
+		int x1 = (xMove + screen.getWidth() + 16) >> 4;
+		int y0 = yMove >> 4;
+        int y1 = (yMove + screen.getHeight() + 16) >> 4;
 
+        for (int y = y0; y < y1; y++){
+            for (int x = x0; x < x1; x++){
+                getTile(x, y).render(x, y, screen); // Render each tile on the proper position in the screen
+            }
+        }
 	}
+
+	public Tile getTile(int x, int y){
+	    if (x < 0 || y < 0 || y > height || x > width) return Sprites.AIR.getTileClass(); // Keep tiles in bounds
+	    return Sprites.getSpriteFromID(tiles[x + y * width]).getTileClass();
+    }
 }

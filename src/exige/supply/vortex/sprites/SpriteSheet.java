@@ -1,6 +1,7 @@
 package exige.supply.vortex.sprites;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -20,7 +21,7 @@ public class SpriteSheet {
 
 	private void load() {
 		try {
-			BufferedImage image = ImageIO.read(SpriteSheet.class.getResource(path));
+			BufferedImage image = ImageIO.read(new File(path));
 			int w = image.getWidth();
 			int h = image.getHeight();
 			image.getRGB(0, 0, w, h, pixels, 0, w); // load sheet pixels into pixels[]

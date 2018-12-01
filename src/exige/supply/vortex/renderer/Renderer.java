@@ -10,12 +10,14 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
 import exige.supply.vortex.input.Keyboard;
+import exige.supply.vortex.levels.Level;
+import exige.supply.vortex.levels.pack.RandomLevel;
 
 public class Renderer extends Canvas implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 	
-	public final static int SCALE = 3;
+	public final static int SCALE = 5;
     public final static int WIDTH = 300;
     public final static int HEIGHT = WIDTH / 16 * 9;
 
@@ -28,6 +30,7 @@ public class Renderer extends Canvas implements Runnable {
 
     private Screen screen;
     private Keyboard keys;
+    private Level level;
     
     private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB); // Create image
     private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData(); // Access image from image raster
@@ -43,6 +46,7 @@ public class Renderer extends Canvas implements Runnable {
     }
 
     private void init(){
+        level = new RandomLevel(64, 64);
         screen = new Screen(WIDTH, HEIGHT);
         keys = new Keyboard();
         addKeyListener(keys); // Enable keyboard input
@@ -95,10 +99,10 @@ public class Renderer extends Canvas implements Runnable {
     int y = 0;
     public void update() {
     	keys.update();
-    	if (keys.up) y++;
-    	if (keys.down) y--;
-    	if (keys.right) x--;
-    	if (keys.left) x++;
+    	if (keys.up) y--;
+    	if (keys.down) y++;
+    	if (keys.right) x++;
+    	if (keys.left) x--;
     }
 
     public void render() { // Render Game
@@ -109,7 +113,7 @@ public class Renderer extends Canvas implements Runnable {
         }
 
         screen.clear(); // Clear screen
-        screen.render(x, y); // Render current screen
+        level.render(x, y, screen); // Render current screen
 
         for (int i = 0; i < pixels.length; i++) {
             pixels[i] = screen.getPixels()[i]; // Write screen to buffered image
