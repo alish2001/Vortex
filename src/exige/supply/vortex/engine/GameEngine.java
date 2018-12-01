@@ -1,19 +1,18 @@
-package exige.supply.vortex.renderer;
+package exige.supply.vortex.engine;
 
-import java.awt.Canvas;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
+import exige.supply.vortex.entities.Player;
 import exige.supply.vortex.input.Keyboard;
 import exige.supply.vortex.levels.Level;
 import exige.supply.vortex.levels.pack.RandomLevel;
 
-public class Renderer extends Canvas implements Runnable {
+public class GameEngine extends Canvas implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -31,31 +30,35 @@ public class Renderer extends Canvas implements Runnable {
     private Screen screen;
     private Keyboard keys;
     private Level level;
+    private Player[] players;
     
     private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB); // Create image
     private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData(); // Access image from image raster
 
-    public Renderer() {
-        init(); // Init Renderer
+    public GameEngine() {
+        init(); // Init GameEngine
     }
 
-    public Renderer(String title) {
-        init(); // Init Renderer
+    public GameEngine(String title) {
+        init(); // Init GameEngine
         this.title = title + " | "; // Append title
         frame.setTitle(this.title); // Set game title
     }
 
     private void init(){
-        level = new RandomLevel(64, 64);
-        screen = new Screen(WIDTH, HEIGHT);
         keys = new Keyboard();
         addKeyListener(keys); // Enable keyboard input
+        players = new Player[2];
+        players[0] = new Player(keys);
+        players[1] = new Player(keys);
+        level = new RandomLevel(64, 64);
+        screen = new Screen(WIDTH, HEIGHT);
         
         Dimension size = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
         setPreferredSize(size); // Set window dimensions
         frame = new JFrame();
         frame.setResizable(false); // Disable resize
-        frame.add(this); // Add game renderer to JFrame
+        frame.add(this); // Add game engine to JFrame
         frame.pack(); // Fill entire window
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null); // Center window
@@ -94,15 +97,10 @@ public class Renderer extends Canvas implements Runnable {
 
         stop(); // Stop thread
     }
-    
-    int x = 0;
-    int y = 0;
+
     public void update() {
     	keys.update();
-    	if (keys.up) y--;
-    	if (keys.down) y++;
-    	if (keys.right) x++;
-    	if (keys.left) x--;
+    	players[0].update();
     }
 
     public void render() { // Render Game
@@ -113,7 +111,7 @@ public class Renderer extends Canvas implements Runnable {
         }
 
         screen.clear(); // Clear screen
-        level.render(x, y, screen); // Render current screen
+        level.render(players[0].x, players[0].y, screen); // Render current screen
 
         for (int i = 0; i < pixels.length; i++) {
             pixels[i] = screen.getPixels()[i]; // Write screen to buffered image
@@ -124,14 +122,14 @@ public class Renderer extends Canvas implements Runnable {
         bs.show(); // Show calculated buffer
     }
 
-    // Renderer thread start
+    // GameEngine thread start
     public synchronized void start() {
         running = true;
-        thread = new Thread(this, title + "Renderer");
+        thread = new Thread(this, title + "GameEngine");
         thread.start();
     }
 
-    // Renderer thread stop
+    // GameEngine thread stop
     public synchronized void stop() {
         running = false;
         try {

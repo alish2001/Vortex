@@ -1,10 +1,6 @@
-package exige.supply.vortex.renderer;
-
-import java.time.OffsetDateTime;
-import java.util.Random;
+package exige.supply.vortex.engine;
 
 import exige.supply.vortex.levels.Tile;
-import exige.supply.vortex.sprites.Sprites;
 
 public class Screen {
 
@@ -31,13 +27,13 @@ public class Screen {
     public void renderTile(int xp, int yp, Tile tile) {
         xp -= xOffset;
         yp -= yOffset;
-        for (int y = 0; y < tile.sprite.getSize(); y++) {
+        for (int y = 0; y < tile.getSprite().getSize(); y++) {
             int yAbsolute = y + yp;
-            for (int x = 0; x < tile.sprite.getSize(); x++) {
+            for (int x = 0; x < tile.getSprite().getSize(); x++) {
                 int xAbsolute = x + xp;
-                if (xAbsolute < -tile.sprite.getSize() || xAbsolute >= width || yAbsolute < 0 || yAbsolute >= height) break; // ONLY render what is on the screen
+                if (xAbsolute < -tile.getSprite().getSize() || xAbsolute >= width || yAbsolute < 0 || yAbsolute >= height) break; // ONLY render what is on the screen
                 if (xAbsolute < 0) xAbsolute = 0;
-                pixels[xAbsolute + yAbsolute * width] = tile.sprite.pixels[x + y * tile.sprite.getSize()];
+                pixels[xAbsolute + yAbsolute * width] = tile.getSprite().pixels[x + y * tile.getSprite().getSize()];
             }
         }
     }

@@ -1,13 +1,13 @@
 package exige.supply.vortex;
 
-import exige.supply.vortex.renderer.Renderer;
+import exige.supply.vortex.engine.GameEngine;
 
 public class Main {
 
 	public static void main(String[] args) {
 		// Add sprite
 		
-		Renderer renderer = new Renderer("Vortex"); // Instantiate Game renderer
+		GameEngine renderer = new GameEngine("Vortex"); // Instantiate Game engine
 		renderer.start();
 	}
 }

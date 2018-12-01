@@ -1,7 +1,7 @@
 package exige.supply.vortex.levels;
 
-import exige.supply.vortex.renderer.Screen;
-import exige.supply.vortex.sprites.Sprites;
+import exige.supply.vortex.engine.Screen;
+import exige.supply.vortex.levels.tiles.TileType;
 
 public class Level {
 
@@ -51,7 +51,7 @@ public class Level {
 	}
 
 	public Tile getTile(int x, int y){
-	    if (x < 0 || y < 0 || y > height || x > width) return Sprites.AIR.getTileClass(); // Keep tiles in bounds
-	    return Sprites.getSpriteFromID(tiles[x + y * width]).getTileClass();
+	    if (x < 0 || y < 0 || y > height || x > width) return TileType.AIR.getTileClass(); // Keep tiles in bounds
+	    return TileType.getTypeFromID(tiles[x + y * width]).getTileClass();
     }
 }

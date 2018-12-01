@@ -1,12 +1,12 @@
 package exige.supply.vortex.levels;
 
-import exige.supply.vortex.renderer.Screen;
+import exige.supply.vortex.engine.Screen;
 import exige.supply.vortex.sprites.Sprite;
 
 public class Tile {
 
-    public int x, y;
-    public Sprite sprite;
+    private int x, y;
+    private Sprite sprite;
 
     public Tile (Sprite sprite){
         this.sprite = sprite;
@@ -18,6 +18,10 @@ public class Tile {
 
     public boolean solid(){
         return false;
+    }
+
+    public Sprite getSprite() {
+        return sprite;
     }
 
 }
