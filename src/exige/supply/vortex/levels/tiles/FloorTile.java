@@ -6,7 +6,7 @@ import exige.supply.vortex.sprites.Sprite;
 public class FloorTile extends Tile {
 
     public FloorTile(Sprite sprite) {
-        super(sprite);
+        super(sprite, false);
     }
 
 }

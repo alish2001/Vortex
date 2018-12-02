@@ -6,6 +6,6 @@ import exige.supply.vortex.sprites.Sprite;
 public class AirTile extends Tile {
 
     public AirTile(Sprite sprite){
-        super(sprite);
+        super(sprite, true);
     }
 }

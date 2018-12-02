@@ -5,9 +5,11 @@ import exige.supply.vortex.engine.Screen;
 
 public abstract class Entity {
 
+    //TODO: SEE IF NEEDED OR NOT
+
     public int x, y;
     private boolean removed = false;
-    protected Level level;
+    protected Level level; //TODO: RETRIEVE LEVEL FROM GAMEENGINE
 
     public void update() {
     }

@@ -1,6 +1,7 @@
 package exige.supply.vortex.engine;
 
 import exige.supply.vortex.levels.Tile;
+import exige.supply.vortex.sprites.Sprite;
 
 public class Screen {
 
@@ -8,9 +9,7 @@ public class Screen {
     private int[] pixels;
     private int xOffset, yOffset;
 
-    public final int MAP_SIZE = 64;
-    public final int MAP = MAP_SIZE * MAP_SIZE;
-    public final int MAP_MASK = MAP_SIZE - 1;
+    private final int TRANSPARENT = 0xFFFF00FF;
 
     public Screen(int width, int height) {
         this.width = width;
@@ -25,15 +24,25 @@ public class Screen {
     }
 
     public void renderTile(int xp, int yp, Tile tile) {
+        renderSprite(xp, yp, tile.getSprite());
+    }
+
+    public void renderSprite(int xp, int yp, Sprite sprite) {
         xp -= xOffset;
         yp -= yOffset;
-        for (int y = 0; y < tile.getSprite().getSize(); y++) {
+        for (int y = 0; y < sprite.getSize(); y++) {
             int yAbsolute = y + yp;
-            for (int x = 0; x < tile.getSprite().getSize(); x++) {
+            for (int x = 0; x < sprite.getSize(); x++) {
                 int xAbsolute = x + xp;
-                if (xAbsolute < -tile.getSprite().getSize() || xAbsolute >= width || yAbsolute < 0 || yAbsolute >= height) break; // ONLY render what is on the screen
+                if (xAbsolute < -sprite.getSize() || xAbsolute >= width || yAbsolute < 0 || yAbsolute >= height) break; // ONLY render what is on the screen
                 if (xAbsolute < 0) xAbsolute = 0;
-                pixels[xAbsolute + yAbsolute * width] = tile.getSprite().pixels[x + y * tile.getSprite().getSize()];
+
+                int color = sprite.pixels[x + y * sprite.getSize()];
+
+                // If pixel isn't transparent, render
+                if (color != TRANSPARENT){
+                    pixels[xAbsolute + yAbsolute * width] = color;
+                }
             }
         }
     }

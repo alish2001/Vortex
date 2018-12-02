@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 public class Keyboard implements KeyListener {
 
     // TODO MAKE OBJECT
-	private boolean keys[] = new boolean[120];
+	private boolean keys[] = new boolean[240];
 	public boolean up_W, down_S, left_A, right_D, up_ARROW, down_ARROW, left_ARROW, right_ARROW;
 	
 	public void update() {
@@ -34,6 +34,4 @@ public class Keyboard implements KeyListener {
 	public void keyTyped(KeyEvent e) {
 		
 	}
-	
-
 }

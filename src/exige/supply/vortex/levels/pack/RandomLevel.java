@@ -1,10 +1,9 @@
 package exige.supply.vortex.levels.pack;
 
-import exige.supply.vortex.U;
 import exige.supply.vortex.levels.Level;
+import exige.supply.vortex.levels.tiles.TileType;
 
 public class RandomLevel extends Level {
-
 
     public RandomLevel(int width, int height) {
         super(width, height);
@@ -14,8 +13,7 @@ public class RandomLevel extends Level {
     protected void generate() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                int tileIndex = x + y * width;
-                tiles[tileIndex] = U.getRandomInt(0, 3);
+                setTile(x, y, TileType.getRandomType().getTileClass());
             }
         }
     }

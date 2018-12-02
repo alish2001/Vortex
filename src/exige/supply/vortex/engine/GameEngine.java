@@ -10,13 +10,12 @@ import javax.swing.JFrame;
 import exige.supply.vortex.entities.Player;
 import exige.supply.vortex.input.Keyboard;
 import exige.supply.vortex.levels.Level;
-import exige.supply.vortex.levels.pack.RandomLevel;
 
 public class GameEngine extends Canvas implements Runnable {
 
-	private static final long serialVersionUID = 1L;
-	
-	public final static int SCALE = 5;
+    private static final long serialVersionUID = 1L;
+
+    public final static int SCALE = 5;
     public final static int WIDTH = 300;
     public final static int HEIGHT = WIDTH / 16 * 9;
 
@@ -31,7 +30,7 @@ public class GameEngine extends Canvas implements Runnable {
     private Keyboard keys;
     private Level level;
     private Player[] players;
-    
+
     private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB); // Create image
     private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData(); // Access image from image raster
 
@@ -45,15 +44,15 @@ public class GameEngine extends Canvas implements Runnable {
         frame.setTitle(this.title); // Set game title
     }
 
-    private void init(){
+    private void init() {
         keys = new Keyboard();
         addKeyListener(keys); // Enable keyboard input
         players = new Player[2];
         players[0] = new Player(keys);
         players[1] = new Player(keys);
-        level = new RandomLevel(64, 64);
+        level = new Level("res/textures/PeachyRuins.png");
         screen = new Screen(WIDTH, HEIGHT);
-        
+
         Dimension size = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
         setPreferredSize(size); // Set window dimensions
         frame = new JFrame();
@@ -79,7 +78,7 @@ public class GameEngine extends Canvas implements Runnable {
             long now = System.nanoTime(); // Current time
             delta += (now - lastTime) / ns; // DeltaTime divided by refresh const
             lastTime = now; // Reset lastTime
-            while (delta >= 1){ // update UP times a second
+            while (delta >= 1) { // update UP times a second
                 update();
                 updates++; // Increment update counter
                 delta--; // Decrement delta, if delta is still >= wait for the update() to catch up
@@ -99,8 +98,8 @@ public class GameEngine extends Canvas implements Runnable {
     }
 
     public void update() {
-    	keys.update();
-    	players[0].update();
+        keys.update();
+        players[0].update();
     }
 
     public void render() { // Render Game
@@ -111,7 +110,8 @@ public class GameEngine extends Canvas implements Runnable {
         }
 
         screen.clear(); // Clear screen
-        level.render(players[0].x, players[0].y, screen); // Render current screen
+        level.render(players[0].x - screen.getWidth() / 2, players[0].y - screen.getHeight() / 2, screen); // Render current screen
+        players[0].render(screen);
 
         for (int i = 0; i < pixels.length; i++) {
             pixels[i] = screen.getPixels()[i]; // Write screen to buffered image
@@ -139,7 +139,15 @@ public class GameEngine extends Canvas implements Runnable {
         }
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         this.title = title + " |";
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
+    }
+
+    public Level getLevel() {
+        return level;
     }
 }
