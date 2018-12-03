@@ -15,7 +15,7 @@ public class GameEngine extends Canvas implements Runnable {
 
     private static final long serialVersionUID = 1L;
 
-    public final static int SCALE = 5;
+    public final static int SCALE = 3;
     public final static int WIDTH = 300;
     public final static int HEIGHT = WIDTH / 16 * 9;
 
@@ -45,7 +45,7 @@ public class GameEngine extends Canvas implements Runnable {
     }
 
     private void init() {
-        keys = new Keyboard();
+        keys = new Keyboard(3);
         addKeyListener(keys); // Enable keyboard input
         players = new Player[2];
         players[0] = new Player(keys);
@@ -106,7 +106,6 @@ public class GameEngine extends Canvas implements Runnable {
         BufferStrategy bs = getBufferStrategy(); // Retrieve the buffer strategy
         if (bs == null) { // if buffer strategy is non-existent,
             createBufferStrategy(3); // Create triple buffer
-            return;
         }
 
         screen.clear(); // Clear screen
@@ -114,9 +113,9 @@ public class GameEngine extends Canvas implements Runnable {
         players[0].render(screen);
 
         for (int i = 0; i < pixels.length; i++) {
-            pixels[i] = screen.getPixels()[i]; // Write screen to buffered image
+            pixels[i] = screen.getPixels()[i]; // Write screen pixels to buffered pixels
         }
-        Graphics g = bs.getDrawGraphics(); // Link graphics to buffer
+        Graphics g = bs.getDrawGraphics(); // Link graphics object to buffer strategy
         g.drawImage(image, 0, 0, getWidth(), getHeight(), null); // Draw image to Graphics object
         g.dispose(); // Empty rendered graphics from memory
         bs.show(); // Show calculated buffer

@@ -1,12 +1,13 @@
 package exige.supply.vortex.levels;
 
-import exige.supply.vortex.engine.Screen;
-import exige.supply.vortex.levels.tiles.TileType;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import exige.supply.vortex.engine.Screen;
+import exige.supply.vortex.levels.tiles.TileType;
 
 public class Level {
 
