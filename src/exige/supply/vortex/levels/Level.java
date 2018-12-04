@@ -3,7 +3,9 @@ package exige.supply.vortex.levels;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -16,17 +18,15 @@ public class Level {
     //TODO: ADD SPAWNPOINT SYSTEM
     protected String name;
     protected int width, height;
-    protected Tile[] tiles;
-    private int[] loadingPixels;
-
-    protected List<Entity> entities = new ArrayList<Entity>();
+    private Tile[] tiles;
+    
+    private List<Entity> entities = new ArrayList<Entity>();
 
     public Level(String name, int width, int height) {
         this.name = name;
         this.width = width;
         this.height = height;
         tiles = new Tile[width * height];
-        generate();
     }
 
     public Level(int width, int height) {
@@ -34,33 +34,35 @@ public class Level {
         this.width = width;
         this.height = height;
         tiles = new Tile[width * height];
-        generate();
     }
 
+    public Level(String name, String path) {
+        loadLevel(path);
+        this.name = name;
+    }
+    
     public Level(String path) {
         loadLevel(path);
-        generate();
     }
 
     private void loadLevel(String path) {
         try {
-            BufferedImage image = ImageIO.read(new File(path));
+        	File levelFile = new File(path);
+        	this.name = levelFile.getName(); // Set the level name to file name if name is not specified
+            BufferedImage image = ImageIO.read(levelFile);
             width = image.getWidth();
             height = image.getHeight();
-            loadingPixels = new int[width * height];
+            int [] loadingPixels = new int[width * height];
             tiles = new Tile[width * height];
             image.getRGB(0, 0, width, height, loadingPixels, 0, width);
+            for (int i = 0; i < tiles.length; i++) {
+                tiles[i] = TileType.getTypeFromID(loadingPixels[i]).getTileClass();
+            }
+            
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("<ERROR> Failed to load level!");
         }
-    }
-
-    protected void generate() {
-        for (int i = 0; i < tiles.length; i++) {
-            tiles[i] = TileType.getTypeFromID(loadingPixels[i]).getTileClass();
-        }
-
     }
 
     public void run() {

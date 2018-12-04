@@ -1,17 +1,16 @@
 package exige.supply.vortex.engine;
 
-import java.awt.*;
+import java.awt.Canvas;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.security.Key;
 
 import javax.swing.JFrame;
 
-import exige.supply.vortex.entities.ExecutionerBullet;
 import exige.supply.vortex.entities.Player;
-import exige.supply.vortex.entities.Projectile;
 import exige.supply.vortex.input.Keyboard;
 import exige.supply.vortex.levels.Level;
 
@@ -44,7 +43,7 @@ public class GameEngine extends Canvas implements Runnable {
 
     public GameEngine(String title) {
         init(); // Init GameEngine
-        this.title = title + " | "; // Append title
+        this.title = title + " | Singluarity Engine V1.0 "; // Append title
         frame.setTitle(this.title); // Set game title
     }
 
