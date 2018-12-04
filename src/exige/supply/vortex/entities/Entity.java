@@ -18,12 +18,11 @@ public abstract class Entity {
     }
 
     public void remove(){
-        // Remove from level
-        removed = true;
+        removed = true; // Set entity removed status true
     }
 
     public boolean isRemoved(){
-        return removed;
+        return removed; // Re turn removed state
     }
 
 }

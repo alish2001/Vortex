@@ -1,13 +1,17 @@
 package exige.supply.vortex.engine;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.security.Key;
 
 import javax.swing.JFrame;
 
+import exige.supply.vortex.entities.ExecutionerBullet;
 import exige.supply.vortex.entities.Player;
+import exige.supply.vortex.entities.Projectile;
 import exige.supply.vortex.input.Keyboard;
 import exige.supply.vortex.levels.Level;
 
@@ -45,12 +49,12 @@ public class GameEngine extends Canvas implements Runnable {
     }
 
     private void init() {
-        keys = new Keyboard(3);
+        level = new Level("res/textures/PeachyRuins.png");
+        keys = new Keyboard(new int[]{KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_F}); // TODO: IMPLEMENT KEYS PER PLAYER
         addKeyListener(keys); // Enable keyboard input
         players = new Player[2];
-        players[0] = new Player(keys);
-        players[1] = new Player(keys);
-        level = new Level("res/textures/PeachyRuins.png");
+        players[0] = new Player(level, keys, 1); // TODO: IMPLEMENT KEYS PER PLAYER OR SOMETHING
+        players[1] = new Player(level, keys, 1); // TODO: IMPLEMENT KEYS PER PLAYER
         screen = new Screen(WIDTH, HEIGHT);
 
         Dimension size = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
@@ -94,18 +98,19 @@ public class GameEngine extends Canvas implements Runnable {
             }
         }
 
-        stop(); // Stop thread
+        stop(); // Stop game thread
     }
 
     public void update() {
-        keys.update();
         players[0].update();
+        level.update();
     }
 
     public void render() { // Render Game
         BufferStrategy bs = getBufferStrategy(); // Retrieve the buffer strategy
         if (bs == null) { // if buffer strategy is non-existent,
             createBufferStrategy(3); // Create triple buffer
+            return;
         }
 
         screen.clear(); // Clear screen

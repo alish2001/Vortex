@@ -3,7 +3,7 @@ package exige.supply.vortex.sprites;
 public class Sprite {
 
 	private SpriteSheet sheet;
-	public final int SIZE;
+	private final int SIZE;
 	private int x, y;
 	public int[] pixels;
 

@@ -3,10 +3,12 @@ package exige.supply.vortex.levels;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.*;
 
 import javax.imageio.ImageIO;
 
 import exige.supply.vortex.engine.Screen;
+import exige.supply.vortex.entities.Entity;
 import exige.supply.vortex.levels.tiles.TileType;
 
 public class Level {
@@ -15,8 +17,9 @@ public class Level {
     protected String name;
     protected int width, height;
     protected Tile[] tiles;
-
     private int[] loadingPixels;
+
+    protected List<Entity> entities = new ArrayList<Entity>();
 
     public Level(String name, int width, int height) {
         this.name = name;
@@ -65,7 +68,9 @@ public class Level {
     }
 
     public void update() {
-
+        for (Entity entity : entities){ // For all entities in the level
+            entity.update(); // Update entity state
+        }
     }
 
     public void render(int xMove, int yMove, Screen screen) {
@@ -81,6 +86,24 @@ public class Level {
                 getTile(x, y).render(x, y, screen); // Render each tile on the proper position in the screen
             }
         }
+
+        for (Entity entity : entities){ // For all entities in the level
+            entity.render(screen);
+        }
+    }
+
+    public List<Entity> getEntities(){
+        return entities;
+    }
+
+    public void addEntity(Entity e){
+        if (entities == null)
+            entities = new ArrayList<Entity>();
+        entities.add(e);
+    }
+
+    public void removeEntity(Entity e){
+        entities.remove(e);
     }
 
     public Tile getTile(int x, int y) {
@@ -90,7 +113,6 @@ public class Level {
 
     public boolean isLocationOutOfBounds(int x, int y){
         return (x < 0 || y < 0 || y >= height || x >= width); // Check Level boundries
-
     }
 
     public void setTile(int x, int y, Tile tile){
