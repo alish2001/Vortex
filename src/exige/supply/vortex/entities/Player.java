@@ -50,11 +50,11 @@ public class Player extends Entity {
     private void shoot() {
         // TODO: Window Height/Width methods...???
         // TODO: FIX DIRECTIONAL SHOOTING
-        int dx = Math.abs(x  /*- (GameEngine.WIDTH * GameEngine.SCALE / 2)*/);
+        int dx = Math.abs(x  /*-(GameEngine.WIDTH * GameEngine.SCALE / 2)*/);
         int dy = Math.abs(y  /*-(GameEngine.HEIGHT * GameEngine.SCALE / 2)*/);
         double dir = Math.atan2(dy, dx);
 
-        Projectile p = new ExecutionerBullet(dx, dy, dir);
+        Projectile p = new ExecutionerBullet(dx, dy, 90);
         boundEntities.add(p);
         level.addEntity(p);
         coolDowns[0] = ExecutionerBullet.COOLDOWN; // Reset cooldown
@@ -72,7 +72,7 @@ public class Player extends Entity {
             if (coolDowns[i] > 0) // If cooldown isn't reset
                 coolDowns[i]--; // Subtract
         }
-
+        
         // Key Moves
         int xa = 0, ya = 0; // Movement vars
         if (input.isPressed(KeyEvent.VK_W)) ya--;
@@ -82,12 +82,11 @@ public class Player extends Entity {
         if (xa != 0 || ya != 0) move(xa, ya); // If it is required to move, move
 
         // Entity Remover
-        //TODO: SEEMLESS SPLICING?!
         for (int i = 0; i < boundEntities.size(); i++) {
-            if (boundEntities.get(i) instanceof Projectile) { // If the entity is a subclass of projectile
-                Projectile p = (Projectile) boundEntities.get(i); // Cast type to projectile
+            if (boundEntities.get(i) instanceof Projectile) { // If the entity at index i of boundEntities is a subclass of projectile
+                Projectile p = (Projectile) boundEntities.get(i); // Cast type to projectile and instantiate projectile object
                 if (p.isRemoved()) { // If the projectile has been removed (past render range)
-                    level.removeEntity(p); // Remove from render if out of range
+                    level.removeEntity(p); // Remove from level entities if out of range
                     boundEntities.remove(i); // Remove from bound entities if out of range
                 }
             }
@@ -117,7 +116,6 @@ public class Player extends Entity {
             int xC = ((x + xPos) + xC_Exp) / character.getSprite().getSize(); // Retrieve possible colliding tile on the X-axis (convert from pixel to tile precision by diving by Sprite size)
             int yC = ((y + yPos) + yC_Exp) / character.getSprite().getSize(); // Retrieve possible colliding tile on the Y-axis (convert from pixel to tile precision by diving by Sprite size)
 
-            // TODO: GET GAMEENGINE PROPERLY
             if (level.getTile(xC, yC).isSolid())
                 collide = true; // If the tile at xC and yC is a solid, set collide to true
 

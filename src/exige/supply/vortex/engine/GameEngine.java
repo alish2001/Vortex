@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import exige.supply.vortex.entities.Player;
 import exige.supply.vortex.input.Keyboard;
 import exige.supply.vortex.levels.Level;
+import exige.supply.vortex.levels.pack.L_PeachyRuins;
 
 public class GameEngine extends Canvas implements Runnable {
 
@@ -48,8 +49,8 @@ public class GameEngine extends Canvas implements Runnable {
     }
 
     private void init() {
-        level = new Level("res/textures/PeachyRuins.png");
-        keys = new Keyboard(new int[]{KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_F}); // TODO: IMPLEMENT KEYS PER PLAYER
+        level = new L_PeachyRuins(); // Set level to Peachy Ruins
+        keys = new Keyboard(new int[]{KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_F});
         addKeyListener(keys); // Enable keyboard input
         players = new Player[2];
         players[0] = new Player(level, keys, 1); // TODO: IMPLEMENT KEYS PER PLAYER OR SOMETHING
@@ -62,7 +63,7 @@ public class GameEngine extends Canvas implements Runnable {
         frame.setResizable(false); // Disable resize
         frame.add(this); // Add game engine to JFrame
         frame.pack(); // Fill entire window
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close When the exit button is pressed
         frame.setLocationRelativeTo(null); // Center window
         frame.setVisible(true); // Show window
     }
@@ -106,12 +107,11 @@ public class GameEngine extends Canvas implements Runnable {
     }
 
     public void render() { // Render Game
-        BufferStrategy bs = getBufferStrategy(); // Retrieve the buffer strategy
-        if (bs == null) { // if buffer strategy is non-existent,
+        if (getBufferStrategy() == null) { // if buffer strategy is non-existent,
             createBufferStrategy(3); // Create triple buffer
-            return;
         }
 
+        BufferStrategy bs = getBufferStrategy(); // Retrieve the buffer strategy
         screen.clear(); // Clear screen
         level.render(players[0].x - screen.getWidth() / 2, players[0].y - screen.getHeight() / 2, screen); // Render current screen
         players[0].render(screen);

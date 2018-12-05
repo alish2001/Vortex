@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -15,7 +14,7 @@ import exige.supply.vortex.levels.tiles.TileType;
 
 public class Level {
 
-    //TODO: ADD SPAWNPOINT SYSTEM
+	protected SpawnPoint spawnPoint;
     protected String name;
     protected int width, height;
     private Tile[] tiles;
@@ -74,7 +73,7 @@ public class Level {
             entity.update(); // Update entity state
         }
     }
-
+    
     public void render(int xMove, int yMove, Screen screen) {
         screen.setOffset(xMove, yMove);
         // Corner Pins
@@ -88,7 +87,6 @@ public class Level {
                 getTile(x, y).render(x, y, screen); // Render each tile on the proper position in the screen
             }
         }
-
         for (Entity entity : entities){ // For all entities in the level
             entity.render(screen);
         }

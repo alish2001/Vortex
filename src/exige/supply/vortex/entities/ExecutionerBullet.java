@@ -13,8 +13,8 @@ public class ExecutionerBullet extends Projectile {
         damage = 20.0;
         speed = 4.0;
         angle = dir;
-        newX = speed * Math.cos(angle);
-        newY = speed * Math.sin(angle);
+        newX = speed * Math.cos(Math.toRadians(angle));
+        newY = speed * Math.sin(Math.toRadians(angle));
         renderRange = 200;
     }
 
