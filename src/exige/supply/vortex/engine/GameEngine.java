@@ -23,7 +23,7 @@ public class GameEngine extends Canvas implements Runnable {
 
     private static final long serialVersionUID = 1L;
 
-    public final static int SCALE = 3;
+    public final static int SCALE = 4;
     public final static int WIDTH = 300;
     public final static int HEIGHT = WIDTH / 16 * 9;
 

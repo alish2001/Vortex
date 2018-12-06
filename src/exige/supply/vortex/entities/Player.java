@@ -2,7 +2,6 @@ package exige.supply.vortex.entities;
 
 import exige.supply.vortex.engine.Screen;
 import exige.supply.vortex.entities.projectiles.ExecutionerBullet;
-import exige.supply.vortex.entities.projectiles.Projectile;
 import exige.supply.vortex.input.Keyboard;
 import exige.supply.vortex.levels.Level;
 import exige.supply.vortex.levels.SpawnPoint;
@@ -15,8 +14,8 @@ public class Player extends Entity {
     private int[] coolDowns;
     private Keyboard input; // TODO: SOMETHING WITH GAMEENGINE
 
-    private final double SPEED = 1.0;
-    private int dir = 0;
+    private Directions direction = Directions.SOUTH;
+    private final int SPEED = 1;
     private boolean walking = false;
 
     public Player(Level level, Keyboard input, int numberOfProjectiles) {
@@ -38,15 +37,18 @@ public class Player extends Entity {
 
 
     public void move(int xMove, int yMove) {
-        dir = xMove + yMove * 3; // Calculate 8-way direction
 
+        direction = Directions.getDirection(xMove, yMove);
+
+        xMove = xMove *  SPEED;
+        yMove = yMove * SPEED;
         if (!doesCollide(xMove, 0, character.getSprite())) { // If not colliding on the X-axis, move player on X-axis
-            x += xMove * SPEED;
+            x += xMove;
             walking = true;
         }
 
         if (!doesCollide(0, yMove, character.getSprite())) { // If not colliding on the X-axis, move player on Y-axis
-            y += yMove * SPEED;
+            y += yMove;
             walking = true;
         } else {
             walking = false;
@@ -54,13 +56,8 @@ public class Player extends Entity {
     }
 
     private void shoot() {
-        // TODO: Window Height/Width methods...???
-        // TODO: FIX DIRECTIONAL SHOOTING
-        int dx = Math.abs(x  /*-(GameEngine.WIDTH * GameEngine.SCALE / 2)*/);
-        int dy = Math.abs(y  /*-(GameEngine.HEIGHT * GameEngine.SCALE / 2)*/);
-        double dir = Math.atan2(dy, dx);
-
-        Projectile p = new ExecutionerBullet(level, dx, dy, 180);
+        // Shoots with player as the owner
+        new ExecutionerBullet(level, x, y, direction).setOwner(this);
         coolDowns[0] = ExecutionerBullet.COOLDOWN; // Reset cooldown
     }
 

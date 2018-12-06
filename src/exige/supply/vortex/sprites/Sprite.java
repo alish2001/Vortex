@@ -59,6 +59,7 @@ public class Sprite {
                 pixels[x + y * width] = color; // Set each pixel to desired color
             }
         }
+        generateHitbox();
     }
 
 	private void load() {

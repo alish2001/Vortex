@@ -1,6 +1,8 @@
 package exige.supply.vortex.entities.projectiles;
 
 import exige.supply.vortex.engine.Screen;
+import exige.supply.vortex.entities.Directions;
+import exige.supply.vortex.entities.Player;
 import exige.supply.vortex.levels.Level;
 import exige.supply.vortex.sprites.Sprite;
 
@@ -17,15 +19,26 @@ public class ExecutionerBullet extends Projectile {
 
     }
 
+    public ExecutionerBullet(Level level, int x, int y, Directions dir) {
+        super(level, x, y, 4.0, dir.getAngle());
+        collidable = true;
+        renderRange = 200;
+        damage = 20.0;
+        sprite = new Sprite(10, 5, 0x000000);
+
+    }
+
     public void update() {
 
+        /*Player p = (Player)owner;
+        p.move(2, 3);*/
         double newX = vector.getXComponent();
         double newY = vector.getYComponent();
         if (!doesCollide(x + newX, y + newY, sprite)) {
             x += newX;
             y += newY;
         } else {
-            //remove();
+            remove();
         }
         if (getPixelDistanceTravelled() > renderRange) remove(); // If projectile is past render range, remove entity
     }
