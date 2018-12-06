@@ -4,8 +4,7 @@ import exige.supply.vortex.engine.Screen;
 import exige.supply.vortex.sprites.Sprite;
 
 public class Tile {
-	
-	// TODO: WHY X Y?!
+
     private Sprite sprite;
     private boolean solid;
 

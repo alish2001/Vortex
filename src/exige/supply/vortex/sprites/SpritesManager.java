@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class SpritesManager {
 
     private static SpritesManager manager = new SpritesManager();
-
     private ArrayList<SpriteSheet> sheets;
 
     private SpritesManager() {

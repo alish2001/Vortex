@@ -8,74 +8,76 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import exige.supply.vortex.U;
 import exige.supply.vortex.engine.Screen;
 import exige.supply.vortex.entities.Entity;
 import exige.supply.vortex.levels.tiles.TileType;
 
 public class Level {
 
-	protected SpawnPoint spawnPoint;
+    public final int COLLISION_CONST;
+
     protected String name;
     protected int width, height;
+    protected SpawnPoint[] spawnPoints = new SpawnPoint[]{new SpawnPoint(0, 0)}; // Default value
     private Tile[] tiles;
-    
     private List<Entity> entities = new ArrayList<Entity>();
 
-    public Level(String name, int width, int height) {
+    public Level(String name, int width, int height, int c_Const) {
         this.name = name;
         this.width = width;
         this.height = height;
         tiles = new Tile[width * height];
+        this.COLLISION_CONST = c_Const;
     }
 
-    public Level(int width, int height) {
+    public Level(int width, int height, int c_Const) {
         this.name = "?";
         this.width = width;
         this.height = height;
         tiles = new Tile[width * height];
+        this.COLLISION_CONST = c_Const;
     }
 
-    public Level(String name, String path) {
+    public Level(String name, String path, int c_Const) {
         loadLevel(path);
         this.name = name;
+        this.COLLISION_CONST = c_Const;
     }
-    
-    public Level(String path) {
+
+    public Level(String path, int c_Const) {
         loadLevel(path);
+        this.COLLISION_CONST = c_Const;
     }
 
     private void loadLevel(String path) {
         try {
-        	File levelFile = new File(path);
-        	this.name = levelFile.getName(); // Set the level name to file name if name is not specified
+            File levelFile = new File(path);
+            this.name = levelFile.getName(); // Set the level name to file name if name is not specified
             BufferedImage image = ImageIO.read(levelFile);
             width = image.getWidth();
             height = image.getHeight();
-            int [] loadingPixels = new int[width * height];
+            int[] loadingPixels = new int[width * height];
             tiles = new Tile[width * height];
             image.getRGB(0, 0, width, height, loadingPixels, 0, width);
             for (int i = 0; i < tiles.length; i++) {
                 tiles[i] = TileType.getTypeFromID(loadingPixels[i]).getTileClass();
             }
-            
+
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("<ERROR> Failed to load level!");
         }
     }
 
-    public void run() {
-
-    }
-
     public void update() {
-        for (Entity entity : entities){ // For all entities in the level
-            entity.update(); // Update entity state
+        for (int i = 0; i < entities.size(); i++) { // For all entities in the level
+            entities.get(i).update(); // Update entity state
         }
     }
-    
+
     public void render(int xMove, int yMove, Screen screen) {
-        screen.setOffset(xMove, yMove);
+        screen.setOffset(xMove, yMove); // Render the level based on player movement position
         // Corner Pins
         int x0 = xMove >> 4; // Convert into TILE PRECISION | Shift by 4 (divided by 16(2^4))
         int x1 = (xMove + screen.getWidth() + 16) >> 4;
@@ -87,23 +89,39 @@ public class Level {
                 getTile(x, y).render(x, y, screen); // Render each tile on the proper position in the screen
             }
         }
-        for (Entity entity : entities){ // For all entities in the level
+        for (Entity entity : entities) { // For all entities in the level
             entity.render(screen);
         }
     }
 
-    public List<Entity> getEntities(){
+    public List<Entity> getEntities() {
         return entities;
     }
 
-    public void addEntity(Entity e){
+    public void addEntity(Entity e) {
         if (entities == null)
             entities = new ArrayList<Entity>();
         entities.add(e);
     }
 
-    public void removeEntity(Entity e){
+    public void removeEntity(Entity e) {
         entities.remove(e);
+    }
+
+    public void setSpawnPoints(SpawnPoint[] spawnPoints) {
+        this.spawnPoints = spawnPoints;
+    }
+
+    public SpawnPoint[] getSpawnPoints() {
+        return spawnPoints;
+    }
+
+    public SpawnPoint getSpawnPoint(int number) {
+        return spawnPoints[number - 1];
+    }
+
+    public SpawnPoint getRandomSpawnPoint() {
+        return spawnPoints[U.getRandomInt(0, spawnPoints.length - 1)];
     }
 
     public Tile getTile(int x, int y) {
@@ -111,11 +129,11 @@ public class Level {
         return tiles[x + y * width];
     }
 
-    public boolean isLocationOutOfBounds(int x, int y){
+    public boolean isLocationOutOfBounds(int x, int y) {
         return (x < 0 || y < 0 || y >= height || x >= width); // Check Level boundries
     }
 
-    public void setTile(int x, int y, Tile tile){
+    public void setTile(int x, int y, Tile tile) {
         tiles[x + y * width] = tile;
     }
 

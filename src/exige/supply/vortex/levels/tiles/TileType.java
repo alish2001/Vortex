@@ -8,11 +8,11 @@ import exige.supply.vortex.sprites.SpritesManager;
 public enum TileType {
 
 	// Different Tile Types
-    AIR(0xFFFFFFFF, new AirTile(new Sprite(16, 3, 0, SpritesManager.getInstance().getSheet(1)))),
-    PEACHY_FLOOR(0xFFFFAA00, new FloorTile(new Sprite(16, 0, 0, SpritesManager.getInstance().getSheet(1)))),
-    DIRT_FLOOR(0xFF4A1E00, new FloorTile(new Sprite(16, 1, 0, SpritesManager.getInstance().getSheet(1)))),
-    CERAMIC_FLOOR(0xFFAAAAAA, new FloorTile(new Sprite(16, 2, 0, SpritesManager.getInstance().getSheet(1)))),
-    CERAMIC_WALL(0xFFAAAAA1, new WallTile(new Sprite(16, 2, 0, SpritesManager.getInstance().getSheet(1))));
+    AIR(0xFFFFFFFF, new AirTile(new Sprite(3, 0, 16, SpritesManager.getInstance().getSheet(1)))),
+    PEACHY_FLOOR(0xFFFFAA00, new FloorTile(new Sprite(0, 0, 16, SpritesManager.getInstance().getSheet(1)))),
+    DIRT_FLOOR(0xFF4A1E00, new FloorTile(new Sprite(1, 0, 16, SpritesManager.getInstance().getSheet(1)))),
+    CERAMIC_FLOOR(0xFFAAAAAA, new FloorTile(new Sprite(2, 0, 16, SpritesManager.getInstance().getSheet(1)))),
+    CERAMIC_WALL(0xFFAAAAA1, new WallTile(new Sprite(2, 0, 16, SpritesManager.getInstance().getSheet(1))));
 
     private int ID;
     private Tile tileClass;

@@ -24,30 +24,46 @@ public class Screen {
     }
 
     public void renderTile(int xp, int yp, Tile tile) {
-        renderSprite(xp, yp, tile.getSprite());
+        renderSprite(xp, yp, tile.getSprite(), false);
     }
 
-    public void renderSprite(int xp, int yp, Sprite sprite) {
-        xp -= xOffset;
-        yp -= yOffset;
-        for (int y = 0; y < sprite.getSize(); y++) {
-            int yAbsolute = y + yp;
-            for (int x = 0; x < sprite.getSize(); x++) {
-                int xAbsolute = x + xp;
-                if (xAbsolute < -sprite.getSize() || xAbsolute >= width || yAbsolute < 0 || yAbsolute >= height) break; // ONLY render what is on the screen
-                if (xAbsolute < 0) xAbsolute = 0;
+    public void renderSprite(int xPos, int yPos, Sprite sprite, boolean fixed) {
+        renderSprite(xPos, yPos, sprite, 0, 0, fixed);
+    }
 
-                int color = sprite.pixels[x + y * sprite.getSize()];
+    public void renderSprite(int xPos, int yPos, Sprite sprite, int x_Offset, int y_Offset, boolean fixed) {
+        if (!fixed) { // If not fixed(does not stick on screen), apply render offset
+            xPos -= xOffset;
+            yPos -= yOffset;
+        }
 
-                // If pixel isn't transparent, render
-                if (color != TRANSPARENT){
-                    pixels[xAbsolute + yAbsolute * width] = color;
+        yPos += sprite.getYOffset() + y_Offset; // Center sprite loading by adding its sprite and local y offset
+        xPos += sprite.getXOffset() + x_Offset; // Center sprite loading by adding its sprite and local x offset
+
+        for (int y = 0; y < sprite.getHeight(); y++) {
+            int yAbsolute = y + yPos;
+            for (int x = 0; x < sprite.getWidth(); x++) {
+                int xAbsolute = x + xPos;// Account for sprite loading x offset
+
+                if(xAbsolute < -sprite.getWidth() // If the renderer has to procedurally generate more than ONE FULL TILE
+                        || xAbsolute >= width // If the renderer is passed the width of the screen
+                        || yAbsolute < 0 // If the renderer is below the max height of the screen
+                        || yAbsolute >= height) // If the renderer has to render past the bottom of the screen
+                    break; // ONLY render what is on the screen
+
+                if (xAbsolute < 0) // If the renderer has to a tile on the x-axis procedurally
+                    xAbsolute = 0; // Assume the tile render starts from tile origin (top left pixel)
+
+                int color = sprite.pixels[x + y * sprite.getWidth()]; // Retrieve color value for specific pixel from sprite
+
+                if (color != TRANSPARENT){ // If pixel is not considered transparent
+                    pixels[xAbsolute + yAbsolute * width] = color; // Write sprite color value into screen pixel array
                 }
             }
         }
     }
 
-    public void setOffset(int xOffset, int yOffset){
+    public void setOffset(int xOffset, int yOffset) {
         this.xOffset = xOffset;
         this.yOffset = yOffset;
     }
@@ -56,7 +72,7 @@ public class Screen {
         return pixels;
     }
 
-    public int getWidth (){
+    public int getWidth() {
         return width;
     }
 

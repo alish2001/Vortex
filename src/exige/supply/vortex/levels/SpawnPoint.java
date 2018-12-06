@@ -2,19 +2,16 @@ package exige.supply.vortex.levels;
 
 public class SpawnPoint {
 
+	private final int LEVEL_CONST = 16; // TODO: Link to level builder
 	private int x, y;
 	
 	public SpawnPoint(int x, int y) {
 		this.setX(x);
 		this.setY(y);
 	}
-
-	public int getTileIndex(int width) {
-		return x + y * width;
-	}
 	
 	public int getX() {
-		return x;
+		return x * LEVEL_CONST;
 	}
 
 	public void setX(int x) {
@@ -22,7 +19,7 @@ public class SpawnPoint {
 	}
 
 	public int getY() {
-		return y;
+		return y * LEVEL_CONST;
 	}
 
 	public void setY(int y) {

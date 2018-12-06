@@ -14,8 +14,12 @@ import exige.supply.vortex.entities.Player;
 import exige.supply.vortex.input.Keyboard;
 import exige.supply.vortex.levels.Level;
 import exige.supply.vortex.levels.pack.L_PeachyRuins;
+import exige.supply.vortex.sprites.Sprite;
 
 public class GameEngine extends Canvas implements Runnable {
+
+    public static final String ENGINE_NAME = "Singularity Engine";
+    public static final double VERSION = 0.1;
 
     private static final long serialVersionUID = 1L;
 
@@ -44,7 +48,7 @@ public class GameEngine extends Canvas implements Runnable {
 
     public GameEngine(String title) {
         init(); // Init GameEngine
-        this.title = title + " | Singluarity Engine V1.0 "; // Append title
+        this.title = title + " | " + ENGINE_NAME + " v" + VERSION + " | "; // Append title
         frame.setTitle(this.title); // Set game title
     }
 
@@ -114,6 +118,9 @@ public class GameEngine extends Canvas implements Runnable {
         BufferStrategy bs = getBufferStrategy(); // Retrieve the buffer strategy
         screen.clear(); // Clear screen
         level.render(players[0].x - screen.getWidth() / 2, players[0].y - screen.getHeight() / 2, screen); // Render current screen
+        //////REMOVE HEALTHBAR TEST
+        screen.renderSprite(0,0, new Sprite(40,3,0xF6FFFF),players[0].x-13, players[0].y-2, false);
+        ///////REMOVE
         players[0].render(screen);
 
         for (int i = 0; i < pixels.length; i++) {
@@ -127,8 +134,9 @@ public class GameEngine extends Canvas implements Runnable {
 
     // GameEngine thread start
     public synchronized void start() {
+        System.out.println("Starting Game Thread!");
         running = true;
-        thread = new Thread(this, title + "GameEngine");
+        thread = new Thread(this, title);
         thread.start();
     }
 
