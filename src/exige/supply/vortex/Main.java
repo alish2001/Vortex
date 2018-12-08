@@ -1,13 +1,11 @@
 package exige.supply.vortex;
 
-import exige.supply.vortex.engine.GameEngine;
+import exige.supply.singularityengine.SingularityEngine;
 
 public class Main {
 
-
-	public static GameEngine renderer = new GameEngine("Vortex"); // Instantiate Game engine
+	public static SingularityEngine renderer = new SingularityEngine("Vortex"); // Instantiate Game engine
 	public static void main(String[] args) {
-
 		renderer.start();
 	}
 }

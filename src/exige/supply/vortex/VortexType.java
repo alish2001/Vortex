@@ -1,6 +1,6 @@
 package exige.supply.vortex;
 
-import java.awt.Color;
+import java.awt.*;
 
 public enum VortexType {
 
@@ -12,7 +12,7 @@ public enum VortexType {
 
 	private int r, g, b;
 
-	private VortexType(int r, int g, int b) {
+	VortexType(int r, int g, int b) {
 		this.r = r;
 		this.g = g;
 		this.b = b;

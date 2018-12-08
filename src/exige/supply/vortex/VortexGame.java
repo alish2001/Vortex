@@ -1,11 +1,11 @@
 package exige.supply.vortex;
 
-import exige.supply.vortex.engine.GameEngine;
-import exige.supply.vortex.entities.Player;
+import exige.supply.singularityengine.SingularityEngine;
+import exige.supply.singularityengine.entities.Player;
 
 public class VortexGame {
 
-	private GameEngine renderer;
+	private SingularityEngine renderer;
 
 	private Player[] players = new Player[2];
 	private int time;
@@ -14,7 +14,7 @@ public class VortexGame {
 	public VortexGame() {
 		setTime(180);
 		setNumberOfRounds(3);
-        renderer = new GameEngine();
+        renderer = new SingularityEngine();
 	}
 	
 	public VortexGame(Player player1, Player player2) {
