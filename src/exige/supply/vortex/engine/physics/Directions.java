@@ -1,4 +1,4 @@
-package exige.supply.vortex.entities;
+package exige.supply.vortex.engine.physics;
 
 public enum Directions {
 
@@ -38,6 +38,20 @@ public enum Directions {
         if (dir == -1) return WEST;
 
         return SOUTH; //<---- FAIL-SAFE
+    }
+
+    public static Directions getDirection(double angle){
+        // Get directions based on angle intervals
+        if (angle < 45 && angle >= 0) return EAST;
+        if (angle < 90 && angle >= 45) return SOUTH_EAST;
+        if (angle < 135 && angle >= 90) return SOUTH;
+        if (angle < 180 && angle >= 135) return SOUTH_WEST;
+        if (angle < 225 && angle >= 180) return WEST;
+        if (angle < 270 && angle >= 225) return NORTH_WEST;
+        if (angle < 315 && angle >= 270) return NORTH;
+        if (angle < 360 && angle >= 315) return NORTH_EAST;
+
+        return EAST; //<---- FAIL-SAFE
     }
 
 }

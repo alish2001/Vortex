@@ -9,8 +9,9 @@ public class RandomLevel extends Level {
     public RandomLevel(int width, int height) {
         super("Random", width, height, 16);
         SpawnPoint[] spawnPoints = new SpawnPoint[1];
-        spawnPoints[0] = new SpawnPoint(100, 100);
+        spawnPoints[0] = new SpawnPoint(10, 10);
         setSpawnPoints(spawnPoints);
+        generate();
     }
 
     protected void generate() {

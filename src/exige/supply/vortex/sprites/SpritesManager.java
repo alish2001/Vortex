@@ -1,11 +1,12 @@
 package exige.supply.vortex.sprites;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SpritesManager {
 
     private static SpritesManager manager = new SpritesManager();
-    private ArrayList<SpriteSheet> sheets;
+    private List<SpriteSheet> sheets;
 
     private SpritesManager() {
         sheets = new ArrayList<SpriteSheet>();

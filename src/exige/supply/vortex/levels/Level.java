@@ -117,6 +117,7 @@ public class Level {
     }
 
     public SpawnPoint getSpawnPoint(int number) {
+        System.out.println("num=" + number);
         return spawnPoints[number - 1];
     }
 
@@ -129,12 +130,13 @@ public class Level {
         return tiles[x + y * width];
     }
 
-    public boolean isLocationOutOfBounds(int x, int y) {
-        return (x < 0 || y < 0 || y >= height || x >= width); // Check Level boundries
+    public void setTile(int x, int y, Tile tile){
+        if (isLocationOutOfBounds(x, y)) return; // Do not set a tile out of bounds
+        tiles [x + y * width] = tile;
     }
 
-    public void setTile(int x, int y, Tile tile) {
-        tiles[x + y * width] = tile;
+    public boolean isLocationOutOfBounds(int x, int y) {
+        return (x < 0 || y < 0 || y >= height || x >= width); // Check Level boundries
     }
 
     public String getName() {

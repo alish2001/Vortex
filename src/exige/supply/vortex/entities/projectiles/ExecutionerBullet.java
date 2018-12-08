@@ -1,50 +1,39 @@
 package exige.supply.vortex.entities.projectiles;
 
-import exige.supply.vortex.engine.Screen;
-import exige.supply.vortex.entities.Directions;
-import exige.supply.vortex.entities.Player;
+import exige.supply.vortex.engine.physics.Directions;
 import exige.supply.vortex.levels.Level;
 import exige.supply.vortex.sprites.Sprite;
 
 public class ExecutionerBullet extends Projectile {
 
     public static final int COOLDOWN = 10;
-
-    public ExecutionerBullet(Level level, int x, int y, double angle) {
-        super(level, x, y, 4.0, angle);
-        collidable = true;
-        renderRange = 200;
-        damage = 20.0;
-        sprite = new Sprite(10, 5, 0x000000);
-
-    }
+    private int gracePeriod = 3;
 
     public ExecutionerBullet(Level level, int x, int y, Directions dir) {
         super(level, x, y, 4.0, dir.getAngle());
-        collidable = true;
         renderRange = 200;
         damage = 20.0;
         sprite = new Sprite(10, 5, 0x000000);
+        collidable = false; // make projectile uncollidable for the first update cycle so it does not collide with the shooter
+        if (dir == Directions.EAST) this.x += 4; // Offset shooting by 4 pixels if to the east
+        if (dir == Directions.WEST) this.x -= 4; // Offset shooting by 4 pixels if to the west
+    }
 
+    public ExecutionerBullet(Level level, int x, int y, double angle) {
+        super(level, x, y, 4.0, angle);
+        renderRange = 200;
+        damage = 20.0;
+        sprite = new Sprite(10, 5, 0x000000);
+        collidable = false; // make projectile uncollidable for the first update cycle so it does not collide with the shooter
+        if (Directions.getDirection(angle) == Directions.EAST) this.x += 4; // Offset shooting by 4 pixels if to the east
+        if (Directions.getDirection(angle) == Directions.WEST) this.x -= 4; // Offset shooting by 4 pixels if to the west
     }
 
     public void update() {
-
-        /*Player p = (Player)owner;
-        p.move(2, 3);*/
-        double newX = vector.getXComponent();
-        double newY = vector.getYComponent();
-        if (!doesCollide(x + newX, y + newY, sprite)) {
-            x += newX;
-            y += newY;
-        } else {
-            remove();
+        super.update();
+        if (collidable == false) {
+            if (gracePeriod == 0) collidable = true; // If the grace period has passed enable collision
+            gracePeriod--; // Decrement grace period otherwise
         }
-        if (getPixelDistanceTravelled() > renderRange) remove(); // If projectile is past render range, remove entity
     }
-
-    public void render(Screen screen) {
-        screen.renderSprite(x, y, sprite, false);
-    }
-
 }

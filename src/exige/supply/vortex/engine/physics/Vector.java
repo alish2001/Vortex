@@ -1,4 +1,4 @@
-package exige.supply.vortex.entities.projectiles;
+package exige.supply.vortex.engine.physics;
 
 import exige.supply.vortex.U;
 

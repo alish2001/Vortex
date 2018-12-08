@@ -32,7 +32,6 @@ public class Sprite {
         this.xSlot = xSlot * sheet.SLOT_SIZE; // First sprite pixel on the x-axis on the sheet
         this.ySlot = ySlot * sheet.SLOT_SIZE; // First sprite pixel on the y-axis on the sheet
         this.sheet = sheet;
-        generateHitbox();
         load();
     }
 
@@ -45,7 +44,6 @@ public class Sprite {
         this.xSlot = xSlot * sheet.SLOT_SIZE; // First sprite pixel on the x-axis on the sheet
         this.ySlot = ySlot * sheet.SLOT_SIZE; // First sprite pixel on the y-axis on the sheet
         this.sheet = sheet;
-        generateHitbox();
         load();
     }
 

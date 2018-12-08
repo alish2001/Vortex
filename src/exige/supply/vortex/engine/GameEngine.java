@@ -1,20 +1,17 @@
 package exige.supply.vortex.engine;
 
-import java.awt.Canvas;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.event.KeyEvent;
+import exige.supply.vortex.entities.Player;
+import exige.supply.vortex.entities.PlayerCharacter;
+import exige.supply.vortex.levels.Level;
+import exige.supply.vortex.levels.pack.L_PeachyRuins;
+import exige.supply.vortex.levels.pack.RandomLevel;
+import exige.supply.vortex.sprites.Sprite;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-
-import javax.swing.JFrame;
-
-import exige.supply.vortex.entities.Player;
-import exige.supply.vortex.input.Keyboard;
-import exige.supply.vortex.levels.Level;
-import exige.supply.vortex.levels.pack.L_PeachyRuins;
-import exige.supply.vortex.sprites.Sprite;
 
 public class GameEngine extends Canvas implements Runnable {
 
@@ -35,7 +32,6 @@ public class GameEngine extends Canvas implements Runnable {
     private boolean running;
 
     private Screen screen;
-    private Keyboard keys;
     private Level level;
     private Player[] players;
 
@@ -53,12 +49,14 @@ public class GameEngine extends Canvas implements Runnable {
     }
 
     private void init() {
-        level = new L_PeachyRuins(); // Set level to Peachy Ruins
-        keys = new Keyboard(new int[]{KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_F});
-        addKeyListener(keys); // Enable keyboard input
-        players = new Player[2];
-        players[0] = new Player(level, keys, 1); // TODO: IMPLEMENT KEYS PER PLAYER OR SOMETHING
-        players[1] = new Player(level, keys, 1); // TODO: IMPLEMENT KEYS PER PLAYER
+        level = new L_PeachyRuins(); // Set level to Random by default TODO: Level manager
+
+        players = new Player[2]; // TODO: Player manager?
+        players[0] = new Player(PlayerCharacter.JACK, level,1);
+        players[1] = new Player(PlayerCharacter.JORDAN, level,1);
+        for (Player p : players){
+            addKeyListener(p.getCharacter().getKeys()); // Enable keyboard input for each player
+        }
         screen = new Screen(WIDTH, HEIGHT);
 
         Dimension size = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
@@ -77,7 +75,7 @@ public class GameEngine extends Canvas implements Runnable {
         // Setup timer
         long lastTime = System.nanoTime(); // Retrieve precise system time, pre render loop
         long timer = System.currentTimeMillis();
-        final double ns = 1000000000.0 / UP; // Refresh constant (N / UPS)
+        final double ns = 1000000000.0 / UP; // Refresh constant - How many nano seconds must pass for one refresh cycle(N / UPS)
         double delta = 0;
         int frames = 0;
         int updates = 0;
@@ -106,7 +104,9 @@ public class GameEngine extends Canvas implements Runnable {
     }
 
     public void update() {
-        players[0].update();
+       // for (Player p : players){
+         //   p.update(); // Enable keyboard input for each player
+       // } // TODO: PLAYER MANAGER
         level.update();
     }
 
@@ -117,12 +117,15 @@ public class GameEngine extends Canvas implements Runnable {
 
         BufferStrategy bs = getBufferStrategy(); // Retrieve the buffer strategy
         screen.clear(); // Clear screen
-        level.render(players[0].x - screen.getWidth() / 2, players[0].y - screen.getHeight() / 2, screen); // Render current screen
+        level.render(players[0].getX() - screen.getWidth() / 2, players[0].getY() - screen.getHeight() / 2, screen); // Render current screen
         //////REMOVE HEALTHBAR TEST
-        screen.renderSprite(0,0, new Sprite(40,3,0xF6FFFF),players[0].x-13, players[0].y-2, false);
+        screen.renderSprite(0,0, new Sprite(40,3,0xF6FFFF),players[0].getX()-13, players[0].getY()-2, false);
         ///////REMOVE
-        players[0].render(screen);
+        //for (Player p : players){
+          //  p.render(screen); // Enable keyboard input for each player
+        //} // TODO: PLAYER MANAGER
 
+        renderBS();
         for (int i = 0; i < pixels.length; i++) {
             pixels[i] = screen.getPixels()[i]; // Write screen pixels to buffered pixels
         }
@@ -160,5 +163,13 @@ public class GameEngine extends Canvas implements Runnable {
 
     public Level getLevel() {
         return level;
+    }
+
+    public static void renderBS(){
+
+    }
+
+    public Screen getScreen(){
+        return screen;
     }
 }

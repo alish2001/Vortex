@@ -1,6 +1,8 @@
 package exige.supply.vortex.entities;
 
 import exige.supply.vortex.engine.Screen;
+import exige.supply.vortex.engine.physics.Collisions.Collision;
+import exige.supply.vortex.engine.physics.Directions;
 import exige.supply.vortex.entities.projectiles.ExecutionerBullet;
 import exige.supply.vortex.input.Keyboard;
 import exige.supply.vortex.levels.Level;
@@ -10,17 +12,19 @@ import java.awt.event.KeyEvent;
 
 public class Player extends Entity {
 
-    private PlayerCharacter character = PlayerCharacter.JACK; // TODO: ANIMATE PLAYER
+    private PlayerCharacter character; // TODO: ANIMATE PLAYER
     private int[] coolDowns;
-    private Keyboard input; // TODO: SOMETHING WITH GAMEENGINE
+    private Keyboard input;
 
     private Directions direction = Directions.SOUTH;
     private final int SPEED = 1;
     private boolean walking = false;
 
-    public Player(Level level, Keyboard input, int numberOfProjectiles) {
+    public Player(PlayerCharacter character, Level level, int numberOfProjectiles) {
+        this.character = character;
+        this.sprite = character.getSprite();
         collidable = true;
-        this.input = input;
+        this.input = character.getKeys();
         this.level = level;
         this.coolDowns = new int[numberOfProjectiles];
         for (int i = 0; i < coolDowns.length; i++) {
@@ -33,8 +37,10 @@ public class Player extends Entity {
         SpawnPoint point = level.getRandomSpawnPoint();
         x = point.getX();
         y = point.getY();
+        // If the player collides with an object or entity at the spawnpoint, offset spawn by 50 pixels on the x-axis
+        if (calculateCollision(0,0).doesCollide()) x += 50;
+        addToLevel(); // Add player to level entities
     }
-
 
     public void move(int xMove, int yMove) {
 
@@ -42,12 +48,13 @@ public class Player extends Entity {
 
         xMove = xMove *  SPEED;
         yMove = yMove * SPEED;
-        if (!doesCollide(xMove, 0, character.getSprite())) { // If not colliding on the X-axis, move player on X-axis
+
+        if (!calculateCollision(xMove, 0).doesCollide()) { // If not colliding on the X-axis, move player on X-axis
             x += xMove;
             walking = true;
         }
 
-        if (!doesCollide(0, yMove, character.getSprite())) { // If not colliding on the X-axis, move player on Y-axis
+        if (!calculateCollision(0, yMove).doesCollide()) { // If not colliding on the X-axis, move player on Y-axis
             y += yMove;
             walking = true;
         } else {
@@ -62,11 +69,9 @@ public class Player extends Entity {
     }
 
     public void update() {
-
         // Shoot
         if (input.isPressed(KeyEvent.VK_F) && (coolDowns[0]) <= 0) {
             shoot();
-
         }
 
         for (int i = 0; i < coolDowns.length; i++) { // Decrease cooldowns
@@ -75,12 +80,14 @@ public class Player extends Entity {
         }
         
         // Key Moves
-        int xa = 0, ya = 0; // Movement vars
-        if (input.isPressed(KeyEvent.VK_W)) ya--;
-        if (input.isPressed(KeyEvent.VK_S)) ya++;
-        if (input.isPressed(KeyEvent.VK_A)) xa--;
-        if (input.isPressed(KeyEvent.VK_D)) xa++;
-        if (xa != 0 || ya != 0) move(xa, ya); // If it is required to move, move
+        if (character == PlayerCharacter.JACK) {
+            int xa = 0, ya = 0; // Movement vars
+            if (input.isPressed(KeyEvent.VK_W)) ya--;
+            if (input.isPressed(KeyEvent.VK_S)) ya++;
+            if (input.isPressed(KeyEvent.VK_A)) xa--;
+            if (input.isPressed(KeyEvent.VK_D)) xa++;
+            if (xa != 0 || ya != 0) move(xa, ya); // If it is required to move, move
+        }
     }
 
     public void render(Screen screen) {
@@ -91,8 +98,7 @@ public class Player extends Entity {
 
     }
 
-    public void remove(){
-
+    public PlayerCharacter getCharacter() {
+        return character;
     }
-
 }
