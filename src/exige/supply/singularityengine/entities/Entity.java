@@ -29,11 +29,9 @@ public abstract class Entity {
     }
 
     protected void onEntityCollision(EntityCollision c) {
-
     }
 
     protected void onTileCollision(TileCollision c) {
-
     }
 
     protected void onCollision(Collision c) {
@@ -51,7 +49,11 @@ public abstract class Entity {
         }
     }
 
-    protected Collision calculateCollision(double xPos, double yPos) {
+    protected Collision calculateCollision(double xTo, double yTo) {
+        return calculateCollision(x, y, xTo, yTo); // Return calculation result
+    }
+
+    protected Collision calculateCollision(double xFrom, double yFrom, double xTo, double yTo) {
         Collision col = new Collision(); // Create new calculateCollision scenario object
 
         if (!collidable) // If the entity is not collidable
@@ -65,31 +67,33 @@ public abstract class Entity {
             double xC_Width = sprite.getWidth() - 1; // Calculate Collision width
             double yC_Height = sprite.getHeight() - 1; // Calculate Collision height
 
-            double xC_Hitbox = xC_Width + xC_Offset; // Calculate Collision width
-            double yC_Hitbox = yC_Height + yC_Offset; // Calculate Collision height
-
             // TODO: DRAW DIAGRAM.....
             double xC_Exp = corner % 2 * xC_Width + xC_Offset; // Left and right corner check expression
             double yC_Exp = corner / 2 * yC_Height + yC_Offset; // Top and bottom corner check expression
 
-            double xC = ((x + xPos) + xC_Exp);  // Retrieve possible colliding tile on the X-axis
-            double yC = ((y + yPos) + yC_Exp); // Retrieve possible colliding tile on the Y-axis
+            double xC = ((xFrom + xTo) + xC_Exp);  // Retrieve possible colliding tile on the X-axis
+            double yC = ((yFrom + yTo) + yC_Exp); // Retrieve possible colliding tile on the Y-axis
 
-            int xC_Tile = (int) (xC / level.COLLISION_CONST); // convert from pixel to tile precision by diving by tile collision constant
-            int yC_Tile = (int) (yC / level.COLLISION_CONST); // convert from pixel to tile precision by diving by tile collision constant
+            int xC_Tile = (int) (xC / level.TILE_CONST); // convert from pixel to tile precision by diving by tile collision constant
+            int yC_Tile = (int) (yC / level.TILE_CONST); // convert from pixel to tile precision by diving by tile collision constant
 
             for (int i = 0; i < level.getEntities().size(); i++) {
                 Entity e = level.getEntities().get(i);
                 if (e == this) continue;
-                boolean xPixelCollide = (e.getX() >= xC - xC_Hitbox && e.getX() <= xC);
-                boolean yPixelCollide = (e.getY() >= yC - yC_Hitbox && e.getY() <= yC);
+                boolean xPixelCollide = (e.getX() >= xC - level.TILE_CONST && e.getX() <= xC);
+                boolean yPixelCollide = (e.getY() >= yC - level.TILE_CONST && e.getY() <= yC);
                 if (xPixelCollide && yPixelCollide) {
                     col = new EntityCollision(e); // Set Collision type to Entity Collision, set collide to true
                 }
             }
 
-            if (level.getTile(xC_Tile, yC_Tile).isSolid()) // If the tile at (xC,yC) is solid
+            if (level.getTile(xC_Tile, yC_Tile).isSolid()) { // If the tile at (xC,yC) is solid
                 col = new TileCollision(level.getTile(xC_Tile, yC_Tile), xC_Tile, yC_Tile); // Set Collision type to Tile Collision, set collide to true
+            }
+        }
+
+        if (col.doesCollide()) { // If a collision takes place
+            divertCollisionProcessing(col);// Since a collision has been detected follow onCollision procedures
         }
 
         return col; // Return calculation result
@@ -101,8 +105,6 @@ public abstract class Entity {
         if (!potentialCollision.doesCollide()) { // If not colliding, move
             x += (int) xMove;
             y += (int) yMove;
-        } else {
-            divertCollisionProcessing(potentialCollision); // If the potential collision stemming from the movement results in a collision then follow onCollision procedures
         }
     }
 

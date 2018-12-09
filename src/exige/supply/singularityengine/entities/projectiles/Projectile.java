@@ -4,6 +4,7 @@ import exige.supply.singularityengine.entities.Entity;
 import exige.supply.singularityengine.graphics.Screen;
 import exige.supply.singularityengine.levels.Level;
 import exige.supply.singularityengine.physics.Collisions.Collision;
+import exige.supply.singularityengine.physics.Directions;
 import exige.supply.singularityengine.physics.Vector;
 
 public abstract class Projectile extends Entity {
@@ -12,6 +13,7 @@ public abstract class Projectile extends Entity {
     protected Vector vector;
 
     protected final int xOrigin, yOrigin;
+    protected final Directions launchDirection;
     protected double renderRange, damage;
 
     public Projectile(Level level, int x, int y, double speed, double angle) {
@@ -19,6 +21,7 @@ public abstract class Projectile extends Entity {
         xOrigin = x;
         yOrigin = y;
         this.vector = new Vector(speed, angle, false);
+        this.launchDirection = Directions.getDirection(angle);
         this.x = x;
         this.y = y;
         addToLevel();
@@ -28,6 +31,7 @@ public abstract class Projectile extends Entity {
         this.level = level;
         xOrigin = x;
         yOrigin = y;
+        this.launchDirection = vector.getDirection();
         this.vector = vector;
         this.x = x;
         this.y = y;

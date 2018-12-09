@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Level {
 
-    public final int COLLISION_CONST;
+    public final int TILE_CONST;
 
     protected String name;
     protected int width, height;
@@ -27,7 +27,7 @@ public class Level {
         this.width = width;
         this.height = height;
         tiles = new Tile[width * height];
-        this.COLLISION_CONST = c_Const;
+        this.TILE_CONST = c_Const;
     }
 
     public Level(int width, int height, int c_Const) {
@@ -35,18 +35,18 @@ public class Level {
         this.width = width;
         this.height = height;
         tiles = new Tile[width * height];
-        this.COLLISION_CONST = c_Const;
+        this.TILE_CONST = c_Const;
     }
 
     public Level(String name, String path, int c_Const) {
         loadLevel(path);
         this.name = name;
-        this.COLLISION_CONST = c_Const;
+        this.TILE_CONST = c_Const;
     }
 
     public Level(String path, int c_Const) {
         loadLevel(path);
-        this.COLLISION_CONST = c_Const;
+        this.TILE_CONST = c_Const;
     }
 
     private void loadLevel(String path) {
@@ -72,6 +72,10 @@ public class Level {
     public void update() {
         for (int i = 0; i < entities.size(); i++) { // For all entities in the level
             entities.get(i).update(); // Update entity state
+        }
+
+        for (int i = 0; i < tiles.length; i++) { // For all tiles in the level
+            tiles[i].update(); // Update tile state
         }
     }
 
@@ -116,7 +120,6 @@ public class Level {
     }
 
     public SpawnPoint getSpawnPoint(int number) {
-        System.out.println("num=" + number);
         return spawnPoints[number - 1];
     }
 
@@ -127,6 +130,10 @@ public class Level {
     public Tile getTile(int x, int y) {
         if (isLocationOutOfBounds(x, y)) return TileType.AIR.getTileClass(); // Keep tiles in bounds
         return tiles[x + y * width];
+    }
+
+    public Tile[] getTiles(){
+        return tiles;
     }
 
     public void setTile(int x, int y, Tile tile){

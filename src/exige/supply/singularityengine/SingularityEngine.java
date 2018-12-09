@@ -3,9 +3,10 @@ package exige.supply.singularityengine;
 import exige.supply.singularityengine.entities.Player;
 import exige.supply.singularityengine.entities.PlayerCharacter;
 import exige.supply.singularityengine.graphics.Screen;
-import exige.supply.singularityengine.graphics.sprites.Sprite;
 import exige.supply.singularityengine.levels.Level;
-import exige.supply.vortex.levels.L_PeachyRuins;
+import exige.supply.singularityengine.levels.RandomLevel;
+import exige.supply.singularityengine.modules.Bars;
+import exige.supply.singularityengine.modules.Overwatch;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +27,7 @@ public class SingularityEngine extends Canvas implements Runnable {
 
     public final static double UP = 60;
 
-    private String title = "";
+    private String title = ENGINE_NAME + " v" + VERSION + " | ";
     private Thread thread;
     private JFrame frame;
     private boolean running;
@@ -34,6 +35,8 @@ public class SingularityEngine extends Canvas implements Runnable {
     private Screen screen;
     private Level level;
     private Player[] players;
+    private Overwatch overwatch;
+    private Bars bars;
 
     private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB); // Create image
     private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData(); // Access image from image raster
@@ -44,20 +47,20 @@ public class SingularityEngine extends Canvas implements Runnable {
 
     public SingularityEngine(String title) {
         init(); // Init SingularityEngine
-        this.title = title + " | " + ENGINE_NAME + " v" + VERSION + " | "; // Append title
+        this.title += title + " | "; // Append title
         frame.setTitle(this.title); // Set game title
     }
 
     private void init() {
-        level = new L_PeachyRuins(); // Set level to Random by default TODO: Level manager
-
-        players = new Player[2]; // TODO: Player manager
-        players[0] = new Player(PlayerCharacter.JACK, level,1);
-        players[1] = new Player(PlayerCharacter.JORDAN, level,1);
-        for (Player p : players){
-            addKeyListener(p.getCharacter().getKeys()); // Enable keyboard input for each player
-        }
         screen = new Screen(WIDTH, HEIGHT);
+        overwatch = new Overwatch(screen, players);
+        bars = new Bars(screen, players);
+
+        // DEFAULT VALUES
+        setLevel(new RandomLevel(64, 100)); // Set level to Random by default
+        Player[] defaultPlayers = new Player[1]; // Singeplayer JACK by default
+        defaultPlayers[0] = new Player(PlayerCharacter.JACK, level,1);
+        setPlayers(defaultPlayers); // Load default players
 
         Dimension size = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
         setPreferredSize(size); // Set window dimensions
@@ -84,10 +87,10 @@ public class SingularityEngine extends Canvas implements Runnable {
             long now = System.nanoTime(); // Current time
             delta += (now - lastTime) / ns; // DeltaTime divided by refresh const
             lastTime = now; // Reset lastTime
-            while (delta >= 1) { // update UP times a second
-                update();
+            while (delta >= 1) { // If time elapsed is passed one update cycle or more
+                update(); // Update game
                 updates++; // Increment update counter
-                delta--; // Decrement delta, if delta is still >= wait for the update() to catch up
+                delta--; // Decrement delta, if delta is still >=, rerun loop for the update() to catch up
             }
             render(); // Render frame
             frames++; // Increment frames per frame render
@@ -114,11 +117,8 @@ public class SingularityEngine extends Canvas implements Runnable {
 
         BufferStrategy bs = getBufferStrategy(); // Retrieve the buffer strategy
         screen.clear(); // Clear screen
-        //TODO: RENDER BASED ON BOTH PLAYER'S MIDPOINTS IN 2D SPACE "OVERWATCH"
-        level.render(players[0].getX() - screen.getWidth() / 2, players[0].getY() - screen.getHeight() / 2, screen); // Render current screen
-        //////REMOVE HEALTHBAR TEST
-        screen.renderSprite(0,0, new Sprite(40,3,0xF6FFFF),players[0].getX()-13, players[0].getY()-2, false);
-        ///////REMOVE
+        level.render(overwatch.getX(), overwatch.getY(), screen); // Render current screen
+        bars.render(); // Render bars
 
         for (int i = 0; i < pixels.length; i++) {
             pixels[i] = screen.getPixels()[i]; // Write screen pixels to buffered pixels
@@ -153,6 +153,15 @@ public class SingularityEngine extends Canvas implements Runnable {
 
     public void setLevel(Level level) {
         this.level = level;
+    }
+
+    public void setPlayers(Player[] players){
+        this.players = players; // Overwrite player array
+        for (Player p : players){ // For every player
+            addKeyListener(p.getCharacter().getKeys()); // Enable keyboard input
+        }
+        overwatch.setPlayers(players); // Introduce new players to Overwatch
+        bars.setPlayers(players); // Introduce new players to Bars
     }
 
     public Level getLevel() {

@@ -1,31 +1,31 @@
 package exige.supply.singularityengine.entities;
 
-import exige.supply.singularityengine.entities.projectiles.ExecutionerBullet;
 import exige.supply.singularityengine.graphics.Screen;
 import exige.supply.singularityengine.input.Keyboard;
 import exige.supply.singularityengine.levels.Level;
 import exige.supply.singularityengine.levels.SpawnPoint;
+import exige.supply.singularityengine.physics.Collisions.EntityCollision;
 import exige.supply.singularityengine.physics.Directions;
 
 import java.awt.event.KeyEvent;
 
 public class Player extends Entity {
 
-    private PlayerCharacter character; // TODO: ANIMATE PLAYER
-    private int[] coolDowns;
-    private Keyboard input;
+    protected PlayerCharacter character; // TODO: ANIMATE PLAYER
+    protected int[] coolDowns;
+    protected Keyboard input;
 
-    private Directions direction = Directions.SOUTH;
-    private final int SPEED = 1;
-    private boolean walking = false;
+    protected double health = 100.0;
+    protected Directions direction = Directions.SOUTH;
+    protected final int SPEED = 1;
 
-    public Player(PlayerCharacter character, Level level, int numberOfProjectiles) {
+    public Player(PlayerCharacter character, Level level, int numberOfCooldowns) {
         this.character = character;
         this.sprite = character.getSprite();
         collidable = true;
         this.input = character.getKeys();
         this.level = level;
-        this.coolDowns = new int[numberOfProjectiles];
+        this.coolDowns = new int[numberOfCooldowns];
         for (int i = 0; i < coolDowns.length; i++) {
             coolDowns[i] = 0;
         }
@@ -36,6 +36,7 @@ public class Player extends Entity {
         SpawnPoint point = level.getRandomSpawnPoint();
         x = point.getX();
         y = point.getY();
+
         // If the player collides with an object or entity at the spawnpoint, offset spawn by 50 pixels on the x-axis
         if (calculateCollision(0, 0).doesCollide()) x += 50;
         addToLevel(); // Add player to level entities
@@ -48,23 +49,14 @@ public class Player extends Entity {
         xMove = xMove * SPEED;
         yMove = yMove * SPEED;
 
+        // Split axis collision calculation
         if (!calculateCollision(xMove, 0).doesCollide()) { // If not colliding on the X-axis, move player on X-axis
             x += xMove;
-            walking = true;
         }
 
         if (!calculateCollision(0, yMove).doesCollide()) { // If not colliding on the X-axis, move player on Y-axis
             y += yMove;
-            walking = true;
-        } else {
-            walking = false;
         }
-    }
-
-    private void shoot() {
-        // Shoots with player as the owner
-        new ExecutionerBullet(level, x, y, direction).setOwner(this);
-        coolDowns[0] = ExecutionerBullet.COOLDOWN; // Reset cooldown
     }
 
     public void update() {
@@ -73,17 +65,16 @@ public class Player extends Entity {
                 coolDowns[i]--; // Decrement it
         }
         // Key Moves
-        controllerCheck();
+        checkInput();
+
+        if (isDead()) remove(); // If the player's health is 0, remove them as they are dead
     }
 
     public void render(Screen screen) {
         screen.renderSprite(x, y, character.getSprite(), false);
     }
 
-    private void controllerCheck() {
-        if (character != PlayerCharacter.JACK) return;
-
-        if (input.isPressed(KeyEvent.VK_F) && (coolDowns[0]) <= 0) shoot(); // Shoot
+    protected void checkInput() {
 
         int xa = 0, ya = 0; // Movement vars
         if (input.isPressed(KeyEvent.VK_W)) ya--;
@@ -93,7 +84,32 @@ public class Player extends Entity {
         if (xa != 0 || ya != 0) move(xa, ya); // If it is required to move, move
     }
 
+    @Override
+    protected void onEntityCollision(EntityCollision c) {
+        if (!(c.getCollidedEntity() instanceof Player)) return;
+        Directions oppositeDir = Directions.getOppositeDirection(direction);
+        /*x += oppositeDir.getXPlacementOffset() * 16;
+        y += oppositeDir.getYPlacementOffset() * 16;*/
+    }
+
     public PlayerCharacter getCharacter() {
         return character;
     }
+
+    public void setHealth(double health) {
+        this.health = health;
+    }
+
+    public double getHealth() {
+        return health;
+    }
+
+    public int[] getCoolDowns(){
+        return coolDowns;
+    }
+
+    public boolean isDead(){
+        return health <= 0;
+    }
+
 }

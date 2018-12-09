@@ -88,6 +88,14 @@ public class Vector {
         return trajectory;
     }
 
+    public double getAngle(){
+        return angle;
+    }
+
+    public Directions getDirection(){
+        return Directions.getDirection(angle);
+    }
+
     public double getX() {
         return x;
     }
