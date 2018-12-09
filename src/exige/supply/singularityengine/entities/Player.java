@@ -6,6 +6,7 @@ import exige.supply.singularityengine.levels.Level;
 import exige.supply.singularityengine.levels.SpawnPoint;
 import exige.supply.singularityengine.physics.Collisions.EntityCollision;
 import exige.supply.singularityengine.physics.Directions;
+import exige.supply.vortex.Main;
 
 import java.awt.event.KeyEvent;
 
@@ -75,6 +76,7 @@ public class Player extends Entity {
     }
 
     protected void checkInput() {
+        if (input.isPressed(KeyEvent.VK_ESCAPE)) Main.renderer.close();
 
         int xa = 0, ya = 0; // Movement vars
         if (input.isPressed(KeyEvent.VK_W)) ya--;

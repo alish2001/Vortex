@@ -7,6 +7,7 @@ import exige.supply.singularityengine.levels.Level;
 import exige.supply.singularityengine.levels.RandomLevel;
 import exige.supply.singularityengine.modules.Bars;
 import exige.supply.singularityengine.modules.Overwatch;
+import exige.supply.vortex.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,9 +22,10 @@ public class SingularityEngine extends Canvas implements Runnable {
 
     private static final long serialVersionUID = 1L;
 
-    public final static int SCALE = 4;
+    public final static int SCALE = 3;
     public final static int WIDTH = 300;
     public final static int HEIGHT = WIDTH / 16 * 9;
+    public boolean fullscreen;
 
     public final static double UP = 60;
 
@@ -42,19 +44,30 @@ public class SingularityEngine extends Canvas implements Runnable {
     private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData(); // Access image from image raster
 
     public SingularityEngine() {
-        init(); // Init SingularityEngine
+        init(false); // Init SingularityEngine
     }
 
-    public SingularityEngine(String title) {
-        init(); // Init SingularityEngine
+    public SingularityEngine(boolean fullscreen) {
+        init(false); // Init SingularityEngine
+    }
+
+    public SingularityEngine(String title, boolean fullscreen) {
+        init(fullscreen); // Init SingularityEngine
         this.title += title + " | "; // Append title
         frame.setTitle(this.title); // Set game title
     }
 
-    private void init() {
+    public SingularityEngine(String title) {
+        init(false); // Init SingularityEngine
+        this.title += title + " | "; // Append title
+        frame.setTitle(this.title); // Set game title
+    }
+
+    private void init(boolean fullscreen) {
         screen = new Screen(WIDTH, HEIGHT);
         overwatch = new Overwatch(screen, players);
         bars = new Bars(screen, players);
+        this.fullscreen = fullscreen;
 
         // DEFAULT VALUES
         setLevel(new RandomLevel(64, 100)); // Set level to Random by default
@@ -64,7 +77,13 @@ public class SingularityEngine extends Canvas implements Runnable {
 
         Dimension size = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
         setPreferredSize(size); // Set window dimensions
-        frame = new JFrame();
+        frame = new JFrame(); // Instantiate game frame
+
+        if (fullscreen) { // If the frame is desired to be full screen
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize area
+            frame.setUndecorated(true); // Remove top bar
+        }
+
         frame.setResizable(false); // Disable resize
         frame.add(this); // Add game engine to JFrame
         frame.pack(); // Fill entire window
@@ -147,6 +166,10 @@ public class SingularityEngine extends Canvas implements Runnable {
         }
     }
 
+    public boolean isRunning(){
+        return running;
+    }
+
     public void setTitle(String title) {
         this.title = title + " |";
     }
@@ -170,5 +193,16 @@ public class SingularityEngine extends Canvas implements Runnable {
 
     public Screen getScreen(){
         return screen;
+    }
+
+    public boolean isFullscreen() {
+        return fullscreen;
+    }
+
+    public void close(){
+        frame.setVisible(false); // Close window
+        frame.dispose(); // Dispose window data
+        Main.showSplash(2000); // Show splashscreen
+        if (running) stop(); // Stop game thread
     }
 }

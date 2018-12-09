@@ -8,6 +8,7 @@ import exige.supply.singularityengine.levels.Level;
 import exige.supply.singularityengine.levels.SpawnPoint;
 import exige.supply.singularityengine.levels.Tile;
 import exige.supply.singularityengine.physics.Collisions.TileCollision;
+import exige.supply.vortex.Main;
 import exige.supply.vortex.entities.projectile.ExecutionerBullet;
 import exige.supply.vortex.entities.projectile.VortexBullet;
 import exige.supply.vortex.levels.tiles.VortexTile;
