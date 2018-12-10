@@ -11,6 +11,7 @@ import exige.supply.singularityengine.physics.Collisions.TileCollision;
  * Abstract Entity Class.
  * An abstract class is a class that can't be instantiated. It's only purpose is for other classes to extend.
  * Abstract methods in this class must be override by child classes them as they have no body.
+ * Protected methods & fields in this class can only be used by itself and its child classes.
  *
  * @author Ali Shariatmadari
  */

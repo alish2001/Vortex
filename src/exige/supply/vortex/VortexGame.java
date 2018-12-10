@@ -9,7 +9,6 @@ import exige.supply.vortex.entities.players.VortexPlayerTwo;
 import exige.supply.vortex.levels.L_PeachyRuins;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,11 +40,11 @@ public class VortexGame {
         vortex.start(); // start game
     }
 
-    public static void promptReplay(boolean playerOneWin){ // Prompt replay window
+    public static void promptReplay(boolean playerOneWin) { // Prompt replay window
         JWindow window = new JWindow(); // Create window
         window.setLayout(new BorderLayout()); // Set layout to border layout
 
-        if (playerOneWin){
+        if (playerOneWin) {
             ImageIcon logo = ResourceLoader.getImageIcon("prompts/Player1Win.png"); // Load image file
             window.getContentPane().add(new JLabel(logo), BorderLayout.PAGE_START); // Add logo to the top of window
         } else {
@@ -205,7 +204,7 @@ public class VortexGame {
     }
 
     // Show game help menu
-    private static void showHelp(boolean isPause){
+    private static void showHelp(boolean isPause) {
         JWindow window = new JWindow(); // Create window
         window.setLayout(new BorderLayout()); // Set layout to border layout
 
@@ -254,7 +253,7 @@ public class VortexGame {
     }
 
     // Show game controls menu
-    private static void showControls(boolean isPause){
+    private static void showControls(boolean isPause) {
         JWindow window = new JWindow(); // Create window
         window.setLayout(new BorderLayout()); // Set layout to border layout
 

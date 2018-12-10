@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 /**
  * Player Class. Allows Players to be created and has a default player template.
  * Subclass of Entity.
+ * Protected methods & fields in this class can only be used by itself and its child classes.
  *
  * @author Ali Shariatmadari
  */

@@ -18,6 +18,7 @@ import java.awt.event.KeyEvent;
 /**
  * VortexPlayer Class. Holds the properties of a vortex game player.
  * Subclass of @{@link Player}
+ * Protected methods & fields in this class can only be used by itself and its child classes.
  *
  * @author Ali Shariatmadari
  */
