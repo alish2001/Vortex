@@ -5,6 +5,13 @@ import exige.supply.singularityengine.levels.Level;
 import exige.supply.singularityengine.levels.Tile;
 import exige.supply.singularityengine.physics.Directions;
 
+/**
+ * VortexTile Class. Holds the special properties of a vortex.
+ * Subclass of @{@link Tile}
+ *
+ * @author Ali Shariatmadari
+ */
+
 public class VortexTile extends Tile {
 
     public static final int LIFESPAN = 10 * 60; // Life span of the tile
@@ -27,7 +34,7 @@ public class VortexTile extends Tile {
         life = 0; // reset lifespan
     }
 
-    public void update() {
+    public void update() { // updates vortex state
         if (life != LIFESPAN) { // If the lifespan of the tile has still not ended
             life++; // increment lifespan
         } else { // If the lifespan has passed
@@ -35,18 +42,25 @@ public class VortexTile extends Tile {
         }
     }
 
+    // Returns vortex ID
     public int getID() { // Retrieve Vortex Number(ID)
         return ID;
     }
 
+    // Returns vortex x coordinate
     public int getX() { // Retrieve Vortex X coords in the Tile Plane
         return x;
     }
 
+    // Returns vortex y coordinate
     public int getY() { // Retrieve Vortex Y coords in the Tile Plane
         return y;
     }
 
+    /**
+     * Returns the vortex Exit direction
+     * @return @{@link Directions}
+     */
     public Directions getExitDirection() { // Retrieve the direction entities exiting out of the portal must face
         return exitDirection;
     }

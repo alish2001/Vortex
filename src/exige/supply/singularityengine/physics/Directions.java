@@ -1,5 +1,12 @@
 package exige.supply.singularityengine.physics;
 
+/**
+ * Directions Enumerator.
+ * An Enumerator is a list of named constants. Here, it allows organization for the 8 different general directions, their angles, and placement offset values.
+ *
+ * @author Ali Shariatmadari
+ */
+
 public enum Directions {
 
     NORTH(270, 0, 1),
@@ -20,19 +27,34 @@ public enum Directions {
         this.yOffset = yOffset;
     }
 
+    /**
+     * @return the angle of the direction
+     */
     public double getAngle() {
         return this.angle;
     }
 
+    /**
+     * @return the x placement offset of the direction
+     */
     public int getXPlacementOffset() {
         return xOffset;
     }
 
+    /**
+     * @return the y placement offset of the direction
+     */
     public int getYPlacementOffset() {
         return yOffset;
     }
 
-    // Get directions based on x and y coords
+    /**
+     * Returns direction based on x and y movement components
+     *
+     * @param x
+     * @param y
+     * @return @{@link Directions}
+     */
     public static Directions getDirection(int x, int y) {
         int dir = x + y * 3; // 8-way direction calculation - by multiplying the sum of x and y by 3, we get an integer value for all 8 main directions
 
@@ -53,9 +75,15 @@ public enum Directions {
         return SOUTH; //<---- FAIL-SAFE
     }
 
-    // Get directions based on angle intervals
+    /**
+     * Returns direction based on angle given
+     * Calculations done based on direction intervals
+     *
+     * @param angle
+     * @return @{@link Directions}
+     */
     public static Directions getDirection(double angle) {
-        angle = Math.abs(angle); // Make the angle positive
+        angle = Math.abs(angle); // Make sure the angle is positive
         if (angle < 45 && angle >= 0) return EAST;
         if (angle < 90 && angle >= 45) return SOUTH_EAST;
         if (angle < 135 && angle >= 90) return SOUTH;
@@ -68,9 +96,26 @@ public enum Directions {
         return EAST; //<---- FAIL-SAFE
     }
 
-    // Retrieve the direction (angle) directly opposite of the given input by subtracting 180
+    /**
+     * Returns one of the general 4 directions based on @{@link Directions} given
+     *
+     * @param dir @{@link Directions}
+     * @return @{@link Directions}
+     */
+    public static Directions getGeneralDirection(Directions dir) {
+        if (dir == NORTH || dir == NORTH_EAST || dir == NORTH_WEST) return NORTH; // If northern, return northern
+        if (dir == SOUTH || dir == SOUTH_EAST || dir == SOUTH_WEST) return SOUTH; // If southern, return southern
+        return dir; // otherwise return east or west
+    }
+
+    /**
+     * Returns the opposite direction based on @{@link Directions} given
+     *
+     * @param dir @{@link Directions}
+     * @return @{@link Directions}
+     */
     public static Directions getOppositeDirection(Directions dir) {
-        double angle = dir.getAngle();
+        double angle = dir.getAngle(); // Retrieve the angle of the direction given
         if (angle >= 180) { // If the angle is over 180, subtract to find opposite angle
             angle -= 180;
         } else {  // If the angle is less than 180, add to find opposite angle

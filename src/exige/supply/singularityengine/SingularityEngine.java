@@ -7,7 +7,6 @@ import exige.supply.singularityengine.levels.Level;
 import exige.supply.singularityengine.levels.RandomLevel;
 import exige.supply.singularityengine.modules.Bars;
 import exige.supply.singularityengine.modules.Overwatch;
-import exige.supply.vortex.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,10 +14,18 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
+/**
+ * Singularity Engine Class.
+ * Responsible for managing and holding all other engine classes together.
+ *
+ * @author Ali Shariatmadari
+ * @version 1.0
+ */
+
 public class SingularityEngine extends Canvas implements Runnable {
 
     public static final String ENGINE_NAME = "Singularity Engine";
-    public static final double VERSION = 0.1;
+    public static final double VERSION = 1.0;
 
     private static final long serialVersionUID = 1L;
 
@@ -40,8 +47,8 @@ public class SingularityEngine extends Canvas implements Runnable {
     private Overwatch overwatch;
     private Bars bars;
 
-    private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB); // Create image
-    private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData(); // Access image from image raster
+    private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB); // Create buffered image based on vortex height and width
+    private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData(); // Access image data from image raster and store in engine pixels array
 
     public SingularityEngine() {
         init(false); // Init SingularityEngine
@@ -72,7 +79,7 @@ public class SingularityEngine extends Canvas implements Runnable {
         // DEFAULT VALUES
         setLevel(new RandomLevel(64, 100)); // Set level to Random by default
         Player[] defaultPlayers = new Player[1]; // Singeplayer JACK by default
-        defaultPlayers[0] = new Player(PlayerCharacter.JACK, level,1);
+        defaultPlayers[0] = new Player(PlayerCharacter.JACK, level, 1);
         setPlayers(defaultPlayers); // Load default players
 
         Dimension size = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
@@ -93,7 +100,7 @@ public class SingularityEngine extends Canvas implements Runnable {
     }
 
     @Override
-    public void run() {
+    public void run() { // Thread run
         // Setup timer
         long lastTime = System.nanoTime(); // Retrieve precise system time, pre render loop
         long timer = System.currentTimeMillis();
@@ -125,11 +132,13 @@ public class SingularityEngine extends Canvas implements Runnable {
         stop(); // Stop game thread
     }
 
+    // update method run every update cycle to update the game state
     public void update() {
         level.update();
     }
 
-    public void render() { // Render Game
+    // render method run every render cycle to render game state
+    public void render() {
         if (getBufferStrategy() == null) { // if buffer strategy is non-existent,
             createBufferStrategy(3); // Create triple buffer
         }
@@ -166,43 +175,64 @@ public class SingularityEngine extends Canvas implements Runnable {
         }
     }
 
-    public boolean isRunning(){
+    /**
+     * @return game state
+     */
+    public boolean isRunning() {
         return running;
     }
 
+    /**
+     * Sets Game title
+     *
+     * @param title
+     */
     public void setTitle(String title) {
         this.title = title + " |";
     }
 
+    /**
+     * Sets Game @{@link Level}
+     *
+     * @param level
+     */
     public void setLevel(Level level) {
         this.level = level;
     }
 
-    public void setPlayers(Player[] players){
+    /**
+     * Sets Game players
+     *
+     * @param players
+     */
+    public void setPlayers(Player[] players) {
         this.players = players; // Overwrite player array
-        for (Player p : players){ // For every player
+        for (Player p : players) { // For every player
             addKeyListener(p.getCharacter().getKeys()); // Enable keyboard input
         }
         overwatch.setPlayers(players); // Introduce new players to Overwatch
         bars.setPlayers(players); // Introduce new players to Bars
     }
 
+    /**
+     * @return game @{@link Level}
+     */
     public Level getLevel() {
         return level;
     }
 
-    public Screen getScreen(){
+    /**
+     * @return game @{@link Screen}
+     */
+    public Screen getScreen() {
         return screen;
     }
 
+    /**
+     * @return fullscreen state
+     */
     public boolean isFullscreen() {
         return fullscreen;
     }
 
-    public void close(){
-        frame.setVisible(false); // Close window
-        frame.dispose(); // Dispose window data
-        Main.showSplash(2000); // Show splashscreen
-        if (running) stop(); // Stop game thread
-    }
 }
