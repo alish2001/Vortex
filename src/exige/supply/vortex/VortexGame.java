@@ -28,8 +28,11 @@ public class VortexGame {
         showSplash(); // Show game splash screen
     }
 
-    public static void startGame() { // Starts the game
-        vortex = new SingularityEngine("Vortex", true); // Instantiate Game engine for Vortex
+    public static void startGame(boolean reset) { // Starts the game
+        if (vortex == null) {
+
+            vortex = new SingularityEngine("Vortex", false); // Instantiate Game engine for Vortex
+        }
         vortex.setLevel(new L_PeachyRuins()); // Set level to peachy ruins
 
         Player[] players = new Player[2]; // Create 2 player array
@@ -37,7 +40,7 @@ public class VortexGame {
         players[1] = new VortexPlayerTwo(PlayerCharacter.JORDAN, vortex.getLevel()); // Add player 2 to the array
         vortex.setPlayers(players); // Add player array to game
 
-        vortex.start(); // start game
+        if (!reset) vortex.start(); // start game
     }
 
     public static void promptReplay(boolean playerOneWin) { // Prompt replay window
@@ -74,7 +77,7 @@ public class VortexGame {
         startButton.addActionListener(new ActionListener() { // Add action handler for when the button is pressed
             @Override
             public void actionPerformed(ActionEvent e) {
-                startGame(); // Restart game
+                startGame(true); // Restart game
                 // Close window
                 window.setVisible(false);
                 window.dispose();
@@ -118,7 +121,7 @@ public class VortexGame {
         startButton.addActionListener(new ActionListener() { // Add action handler for when the button is pressed
             @Override
             public void actionPerformed(ActionEvent e) {
-                startGame(); // If the start button is pressed, start game
+                startGame(false); // If the start button is pressed, start game
                 // Close window
                 window.setVisible(false);
                 window.dispose();
@@ -177,6 +180,7 @@ public class VortexGame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Close window
+                vortex.setPaused(false);
                 window.setVisible(false);
                 window.dispose();
             }
@@ -269,7 +273,11 @@ public class VortexGame {
         exitButton.addActionListener(new ActionListener() { // Add action handler for when the button is pressed
             @Override
             public void actionPerformed(ActionEvent e) {
-                showSplash(); // Show the game splash menu
+                if (!isPause) { // if the game is not paused
+                    showSplash(); // Show the game splash menu
+                } else {
+                    showPauseMenu(); // Show the pause menu
+                }
                 // Close splash window
                 window.setVisible(false);
                 window.dispose();

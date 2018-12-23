@@ -42,6 +42,6 @@ public class VortexPlayerTwo extends VortexPlayer {
 
     @Override
     protected void onDeath() { // Prompt a loss if player dies and ask for a replay
-        VortexGame.promptReplay(false);
+        VortexGame.promptReplay(true);
     }
 }

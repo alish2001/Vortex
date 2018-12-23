@@ -7,6 +7,7 @@ import exige.supply.singularityengine.levels.Level;
 import exige.supply.singularityengine.levels.RandomLevel;
 import exige.supply.singularityengine.modules.Bars;
 import exige.supply.singularityengine.modules.Overwatch;
+import exige.supply.vortex.VortexGame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,21 +26,22 @@ import java.awt.image.DataBufferInt;
 public class SingularityEngine extends Canvas implements Runnable {
 
     public static final String ENGINE_NAME = "Singularity Engine";
-    public static final double VERSION = 1.0;
+    public static final double VERSION = 1.01;
 
     private static final long serialVersionUID = 1L;
 
-    public final static int SCALE = 3;
+    public final static int SCALE = 5;
     public final static int WIDTH = 300;
     public final static int HEIGHT = WIDTH / 16 * 9;
     public boolean fullscreen;
 
-    public final static double UP = 60;
+    public final static int UP = 60;
 
     private String title = ENGINE_NAME + " v" + VERSION + " | ";
     private Thread thread;
     private JFrame frame;
     private boolean running;
+    private boolean paused = false;
 
     private Screen screen;
     private Level level;
@@ -128,17 +130,17 @@ public class SingularityEngine extends Canvas implements Runnable {
                 frames = 0; // Reset frames calculation
             }
         }
-
-        stop(); // Stop game thread
     }
 
     // update method run every update cycle to update the game state
     public void update() {
+        if (paused) return;
         level.update();
     }
 
     // render method run every render cycle to render game state
     public void render() {
+        if (paused) return;
         if (getBufferStrategy() == null) { // if buffer strategy is non-existent,
             createBufferStrategy(3); // Create triple buffer
         }
@@ -173,6 +175,43 @@ public class SingularityEngine extends Canvas implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        frame.dispose(); // Close game window
+    }
+
+    /**
+     * Should be used by outside classes to pause
+     * Sets Game pause
+     * displays pause menu
+     */
+    public void pause() {
+        if (!paused) setPaused(true);
+    }
+
+    /**
+     * Sets Game pause
+     * displays pause menu
+     *
+     * @param state
+     */
+    public void setPaused(boolean state) {
+        if (state) VortexGame.showPauseMenu();
+        this.paused = state;
+    }
+
+    /**
+     * @return pause state
+     */
+    public boolean isPaused() {
+        return paused;
+    }
+
+    /**
+     * Sets Game state
+     *
+     * @param state
+     */
+    public void setRunning(boolean state) {
+        this.running = state;
     }
 
     /**
@@ -219,6 +258,13 @@ public class SingularityEngine extends Canvas implements Runnable {
      */
     public Level getLevel() {
         return level;
+    }
+
+    /**
+     * @return game @{@link Player}s
+     */
+    public Player[] getPlayers() {
+        return players;
     }
 
     /**

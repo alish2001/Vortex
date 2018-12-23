@@ -34,7 +34,7 @@ public class Keyboard implements KeyListener {
 
     // Key is pressed event
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) VortexGame.showPauseMenu(); // If esc is pressed, exit game
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) VortexGame.vortex.pause(); // If esc is pressed, exit game
         if (keyTracker.containsKey(e.getKeyCode())) // If there is an entry in the keytracker hashmap for this key
             keyTracker.replace(e.getKeyCode(), true); // Set key pressed state to true
     }

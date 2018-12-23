@@ -50,7 +50,7 @@ public class VortexPlayer extends Player {
 
     @Override
     protected void onDeath() { // Prompt a loss if player dies and ask for a replay
-        VortexGame.promptReplay(true);
+        VortexGame.promptReplay(false);
     }
 
     // Shoots executioner bullet
